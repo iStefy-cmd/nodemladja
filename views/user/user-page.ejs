@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= user.name%></h1>
+    <form action="/logout" method="POST">
+      <button type="submit">Logout</button>
+      <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+    </form>
+
+    <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped) {
+    %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
+    <div
+      style="
+        margin-bottom: 10px;
+        background-color: #ffd700;
+        border: 3px solid black;
+        margin-top: 0;
+      "
+      class="date-container"
+    >
+      <h3
+        style="
+          color: #fff;
+          background-color: #008080;
+          padding: 10px;
+          margin-top: 0;
+          text-align: center;
+        "
+      >
+        Date: <%= date %>
+      </h3>
+      <% const transactions = transactionsGrouped[date].transactions; %> <%
+      const totalDebt = transactionsGrouped[date].totalDebt; %> <%
+      transactions.forEach(transaction => { %>
+      <div
+        style="
+          padding: 5px;
+          margin: 1px;
+          border: 1px solid #ccb200;
+          text-align: center;
+        "
+        class="transaction"
+      >
+        <p>Dug: <%= transaction.debt %> din</p>
+        <p>Kolicina: <%= transaction.quantity %> unit</p>
+        <p>Price: <%= transaction.price %> din</p>
+        <p>Type: <%= transaction.type %></p>
+      </div>
+      <% }) %>
+
+      <p style="text-align: center">Dug za ovaj Dan: <%= totalDebt %> din</p>
+    </div>
+    <% } %> <% } %> <%}else{%>
+    <h1>nemate nijednu transakciju :/</h1>
+    <%}%>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>ALL TRANSACTIONS HERE</h1>
+    <a href="/admin/main">MAIN PAGE</a>
+    <% if (alltransactions.length > 0) { %>
+    <ul class="cart__item-list">
+      <% alltransactions.forEach(t => { %>
+        <li class="cart__item">
+          <h1><%= t.name %></h1>
+          <h2>Roba: <%= t.type %></h2> <h2>Kolicina: <%= t.quantity %></h2>   <h2>Cena: <%= t.price %></h2>
+        </li> 
+      <% }) %>
+    </ul>
+
+    <% } else { %>
+    <h1>No alltransactions in Cart!</h1>
+    <% } %>
+  </body>
+</html>
