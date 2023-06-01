@@ -6,7 +6,7 @@ exports.getLogin = (req, res, next) => {
   res.render("auth/login", {});
 };
 exports.postLogin = (req, res, next) => {
-  req.session.cookie.expires = new Date(Date.now() + 3 * 60 * 1000);
+  req.session.cookie.expires = new Date(Date.now() + 1 * 60 * 60 * 1000);
   const email = req.body.email;
   const password = req.body.password;
 
@@ -83,7 +83,7 @@ exports.getAdminLogin = (req, res, next) => {
 };
 
 exports.postAdminLogin = (req, res, next) => {
-  req.session.cookie.expires = new Date(Date.now() + 3 * 60 * 1000);
+  req.session.cookie.expires = new Date(Date.now() + 1*60 * 60 * 1000);
   const email = req.body.email;
   const password = req.body.password;
 

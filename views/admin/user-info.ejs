@@ -4,6 +4,148 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      body {
+        text-align: center;
+      }
+      .hrefs {
+        display: grid;
+        grid-template-columns: 33%33%33%;
+      }
+      a {
+        background-color: #00c853;
+        padding-block: 19px;
+        padding-inline: 50px;
+        text-decoration: none;
+        color: black;
+        border-radius: 8px;
+      }
+      #main-page {
+        text-align: right;
+        margin-left: auto;
+        margin-right: 60px;
+      }
+      #all-transactions {
+        text-align: left;
+        margin-right: auto;
+        margin-left: 60px;
+      }
+      .date-container {
+        margin-bottom: 10px;
+        background-color: #00c853;
+        border: 3px solid black;
+        margin-top: 0;
+      }
+      h3 {
+        color: #fff;
+        background-color: #757575;
+        padding: 10px;
+        margin-top: 0;
+        text-align: center;
+      }
+      .none {
+        display: none;
+      }
+      .transaction {
+        padding: 5px;
+        margin: 1px;
+        border: 1px solid darkgreen;
+        text-align: center;
+        display: grid;
+        grid-template-columns: 20% 20% 20% 20% 20%;
+      }
+      p {
+        text-align: center;
+      }
+      #delete {
+        width: 130px;
+        height: 26px;
+        margin: auto;
+        border-radius: 5px;
+        background-color: rgb(243, 103, 103);
+        border: 1px solid red;
+        cursor: pointer;
+      }.popup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999; /* Higher z-index to appear in front */
+    }
+
+    .popup {
+      background-color: #f8f8f8;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+
+    .popup p {
+      margin-bottom: 20px;
+    }
+
+    .popup button {
+      margin: 10px;
+      padding: 10px 25px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .popup button {
+      margin: 10px;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #d {
+      margin: 10px;
+      margin: auto;
+      width: 200px;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+.confirm {
+      background-color: red;
+      color: #fff;}
+      button:hover {
+      background-color: #0056b3;
+    }
+
+    .popup button.confirm {
+      background-color: red;
+      color: #fff;
+    }
+
+    .popup button.cancel {
+      background-color: green;
+      color: #fff;
+    }
+    .popup button:hover {
+      background-color: #0056b3;
+    }
+    .popup p {
+      margin-bottom: 20px;
+    } .none{
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <%if(user){%>
@@ -11,55 +153,57 @@
       <h1 class="user-name"><%= user.name %></h1>
       <h1 class="user-debt"><%= user.debt %> din</h1>
     </div>
-    <form action="/admin/delete-profile/<%= user._id%>" method="POST">
-      <button type="submit">Delete Profile</button>
+   
       <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
     </form>
-    <a href="/admin/main">MAIN PAGE</a>
-    <a href="/admin/transactions">ALL TRANSACTIONS</a>
+<div class="popup-container none">
+      <div class="popup">
+        <h2>Potvrdni prozor</h2>
+        <p>Da li ste sigurni da zelite obrisati profil?</p>
+        <form action="/admin/delete-profile/<%= user._id%>" method="POST">
+          <button class="confirm" id="delete-profile" type="submit">
+            Obrisi Profil
+          </button>
+        <button class="cancel" onclick="Action(event)">No</button>
+      </div>
+    </div>
+
+    <script>
+      function Action(event) {
+event.preventDefault();
+        // Perform the action when "Yes" is clicked
+        document.querySelector(".popup-container").classList.toggle("none");
+      }
+
+    </script>
+
+    <div class="hrefs">
+      <a id="main-page" href="/admin/main">MAIN PAGE</a><button class="confirm" id="d" onclick="Action(event)">Delete Profile</button>
+      <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>    
+    
+    </div>
     <div class="user-forms">
       <form action="/admin/"></form>
     </div>
     <div class="user-transactions">
       <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
       { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
-      <div
-        style="
-          margin-bottom: 10px;
-          background-color: #ffd700;
-          border: 3px solid black;
-          margin-top: 0;
-        "
-        class="date-container"
-      >
-        <h3
-          style="
-            color: #fff;
-            background-color: #008080;
-            padding: 10px;
-            margin-top: 0;
-            text-align: center;
-          "
-        >
-          Date: <%= date %>
-        </h3>
+      <div class="date-container">
+        <h3>Date: <%= date %></h3>
         <% const transactions = transactionsGrouped[date].transactions; %> <%
         const totalDebt = transactionsGrouped[date].totalDebt; %> <%
         transactions.forEach(transaction => { %>
-        <div
-          style="
-            padding: 5px;
-            margin: 1px;
-            border: 1px solid #ccb200;
-            text-align: center;
-          "
-          class="transaction"
-        >
-          <p>Dug: <%= transaction.debt %> din</p>
-          <p>Kolicina: <%= transaction.quantity %> unit</p>
-          <p>Price: <%= transaction.price %> din</p>
+        <div class="transaction">
           <p>Type: <%= transaction.type %></p>
-          <button onclick="postDeleteTransaction(this)" type="submit">
+          <p>Price: <%= transaction.price %> din</p>
+          <p>Kolicina: <%= transaction.quantity %> unit</p>
+
+          <p>Dug: <%= transaction.debt %> din</p>
+          <button
+            id="delete"
+            onclick="postDeleteTransaction(this)"
+            type="submit"
+          >
             DELETE
           </button>
           <input
@@ -72,7 +216,7 @@
         </div>
         <% }) %>
 
-        <p style="text-align: center">Dug za ovaj Dan: <%= totalDebt %> din</p>
+        <p>Dug za ovaj Dan: <%= totalDebt %> din</p>
       </div>
       <% } %> <% } %> <%}else{%>
       <h1>nemate nijednu transakciju :/</h1>
