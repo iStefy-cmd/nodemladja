@@ -23,7 +23,16 @@ exports.getUserInfo = async (req, res, next) => {
       transactions.forEach((transaction) => {
         const { name } = transaction;
         const debt = transaction.quantity * transaction.price;
-        const date = new Date(transaction.createdAt).toDateString();
+        const date = new Date(transaction.createdAt).toLocaleDateString(
+          "sr-Latn-RS",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "long",
+          }
+        );
+
         const quantity = transaction.quantity;
         const price = transaction.price;
         const type = transaction.type;
@@ -167,12 +176,12 @@ exports.postDeleteProfile = (req, res, next) => {
     .then((user) => {
       if (!user) {
         console.log("OBUSTAVLJAJ");
-        return res.redirect("/admin/main");
+        return res.redirect("/admin/allUsers");
       }
       return Transaction.deleteMany({ userID: id });
     })
-    .then((res) => {
-      console.log(res);
+    .then((resu) => {
+      res.redirect("admin/allUsers");
     })
     .catch((er) => {
       console.log(er);

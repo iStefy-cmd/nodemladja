@@ -5,67 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      body {
+      body{
         text-align: center;
+  background-color: #8ef0b79a;
       }
-      .hrefs {
-        display: grid;
-        grid-template-columns: 33%33%33%;
-      }
-      a {
-        background-color: #00c853;
-        padding-block: 19px;
-        padding-inline: 50px;
-        text-decoration: none;
-        color: black;
-        border-radius: 8px;
-      }
-      #main-page {
-        text-align: right;
-        margin-left: auto;
-        margin-right: 60px;
-      }
-      #all-transactions {
-        text-align: left;
-        margin-right: auto;
-        margin-left: 60px;
-      }
-      .date-container {
-        margin-bottom: 10px;
-        background-color: #00c853;
-        border: 3px solid black;
-        margin-top: 0;
-      }
-      h3 {
-        color: #fff;
-        background-color: #757575;
-        padding: 10px;
-        margin-top: 0;
-        text-align: center;
-      }
-      .none {
-        display: none;
-      }
-      .transaction {
-        padding: 5px;
-        margin: 1px;
-        border: 1px solid darkgreen;
-        text-align: center;
-        display: grid;
-        grid-template-columns: 20% 20% 20% 20% 20%;
-      }
-      p {
-        text-align: center;
-      }
-      #delete {
-        width: 130px;
-        height: 26px;
-        margin: auto;
-        border-radius: 5px;
-        background-color: rgb(243, 103, 103);
-        border: 1px solid red;
-        cursor: pointer;
-      }.popup-container {
+.date-container {
+  margin-bottom: 10px;
+  background-color: #8ef0b7;
+  border: 3px solid black;
+  border-radius: 20px;
+  margin-top: 0;
+}
+h3 {
+  color: #fff;
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+  background-color: #757575;
+  padding: 10px;
+  margin-top: 0;font-size: 20px;
+  text-align: center;
+}
+.transaction {
+  background-color: #00c853;
+  padding: 5px;
+  margin: 1px;
+  border: 2px solid darkgreen;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}p{
+  text-align: center;
+}
+#p { color: #fff;
+  border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+  background-color: #757575;
+  padding: 10px;
+  margin: 0;
+  font-size: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+#delete{
+  margin: 0;
+     width: 200px;
+     height: 30px;
+     margin: auto;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: rgb(255, 58, 58);
+      border:2px solid red;
+}
+
+.popup-container {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -96,36 +86,17 @@
       margin-bottom: 20px;
     }
 
+    .popup-buttons {
+      display: flex;
+      justify-content: center;
+    }
+
     .popup button {
-      margin: 10px;
-      padding: 10px 25px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .popup button {
-      margin: 10px;
+      margin-inline: 30px;
       padding: 10px 25px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-    }
-    #d {
-      margin: 10px;
-      margin: auto;
-      width: 200px;
-      padding: 10px 25px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-.confirm {
-      background-color: red;
-      color: #fff;}
-      button:hover {
-      background-color: #0056b3;
     }
 
     .popup button.confirm {
@@ -137,50 +108,76 @@
       background-color: green;
       color: #fff;
     }
+
     .popup button:hover {
-      background-color: #0056b3;
+      opacity: 0.8;
     }
-    .popup p {
-      margin-bottom: 20px;
-    } .none{
-        display: none;
-      }
+    .none{
+      display: none;
+    }
+    /* linkovi i delete profile */
+
+.hrefs {
+  display: grid;
+  grid-template-columns: 33%33%33%;
+  text-align: center;
+}
+.hrefs a {
+  padding-block: 12px;
+  background-color: green;
+  text-decoration: none;
+  border:2px solid green;
+  border-radius: 10px;
+  color: white;
+  width: 200px;  margin: auto;
+}
+#d{
+  border-radius: 10px;
+  color: white;
+  background-color: red;
+  border:2px solid red ;
+  height: 45px;
+  width: 200px;
+  cursor: pointer;
+  margin: auto;
+}
     </style>
-  </head>
   <body>
     <%if(user){%>
     <div class="name-and-debt">
       <h1 class="user-name"><%= user.name %></h1>
       <h1 class="user-debt"><%= user.debt %> din</h1>
     </div>
-   
-      <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-    </form>
-<div class="popup-container none">
+    <div class="popup-container none">
       <div class="popup">
-        <h2>Potvrdni prozor</h2>
-        <p>Da li ste sigurni da zelite obrisati profil?</p>
+        
+        <h2>Da li ste sigurni da zelite obrisati profil?</h2>
+        <div class="popup-buttons">
         <form action="/admin/delete-profile/<%= user._id%>" method="POST">
-          <button class="confirm" id="delete-profile" type="submit">
+          <button style="height: 50px;" class="confirm" id="delete-profile" type="submit">
             Obrisi Profil
           </button>
-        <button class="cancel" onclick="Action(event)">No</button>
+          <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+        </form>
+        <button class="cancel" style="height: 50px;" onclick="Action(event)">Otkazi</button>
       </div>
+    </div>
     </div>
 
     <script>
       function Action(event) {
-event.preventDefault();
+        event.preventDefault();
         // Perform the action when "Yes" is clicked
         document.querySelector(".popup-container").classList.toggle("none");
       }
-
     </script>
 
     <div class="hrefs">
-      <a id="main-page" href="/admin/main">MAIN PAGE</a><button class="confirm" id="d" onclick="Action(event)">Delete Profile</button>
-      <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>    
-    
+      <a id="main-page" href="/admin/main">MAIN PAGE</a
+      ><button class="confirm" id="d" onclick="Action(event)">
+        Delete Profile
+      </button>
+      <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
     </div>
     <div class="user-forms">
       <form action="/admin/"></form>
@@ -189,7 +186,7 @@ event.preventDefault();
       <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
       { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
       <div class="date-container">
-        <h3>Date: <%= date %></h3>
+        <h3><%= date %></h3>
         <% const transactions = transactionsGrouped[date].transactions; %> <%
         const totalDebt = transactionsGrouped[date].totalDebt; %> <%
         transactions.forEach(transaction => { %>
@@ -216,7 +213,7 @@ event.preventDefault();
         </div>
         <% }) %>
 
-        <p>Dug za ovaj Dan: <%= totalDebt %> din</p>
+        <p id="p">Dug za ovaj Dan: <%= totalDebt %> din</p>
       </div>
       <% } %> <% } %> <%}else{%>
       <h1>nemate nijednu transakciju :/</h1>
@@ -226,6 +223,4 @@ event.preventDefault();
     </div>
   </body>
 </html>
-<script src="/js/admin.js">
-  console.log("asd")
-</script>
+<script src="/js/admin.js"></script>

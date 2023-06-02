@@ -9,7 +9,7 @@ const postDeleteTransaction = (btn) => {
   console.log(transactionhtml.parentNode.childNodes);
 
   transactionhtml.remove();
-  
+
   console.log(transactionhtml.parentNode.childNodes);
   // fetch(
   //   `http://localhost:3000/admin/delete?transactionID=${transactionID}&userID=${userID}`,

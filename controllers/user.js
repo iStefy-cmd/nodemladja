@@ -10,7 +10,15 @@ exports.getUserInfo = (req, res, next) => {
         transactions.forEach((transaction) => {
           const { name } = transaction;
           const debt = transaction.quantity * transaction.price;
-          const date = new Date(transaction.createdAt).toDateString();
+          const date = new Date(transaction.createdAt).toLocaleDateString(
+            "sr-Latn-RS",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              weekday: "long",
+            }
+          );
           const quantity = transaction.quantity;
           const price = transaction.price;
           const type = transaction.type;

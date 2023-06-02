@@ -8,6 +8,7 @@
   </head>
   <body>
     <h1><%= user.name%></h1>
+    <h1><%= user.debt%> din</h1>
     <form action="/logout" method="POST">
       <button type="submit">Logout</button>
       <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
@@ -16,7 +17,7 @@
     <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped) {
     %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
     <div class="date-container">
-      <h3>Date: <%= date %></h3>
+      <h3><%= date %></h3>
       <% const transactions = transactionsGrouped[date].transactions; %> <%
       const totalDebt = transactionsGrouped[date].totalDebt; %> <%
       transactions.forEach(transaction => { %>
@@ -29,7 +30,7 @@
       </div>
       <% }) %>
 
-      <p>Dug za ovaj Dan: <%= totalDebt %> din</p>
+      <p id="p">Dug za ovaj Dan: <%= totalDebt %> din</p>
     </div>
     <% } %> <% } %> <%}else{%>
     <h1>nemate nijednu transakciju :/</h1>

@@ -1,24 +1,54 @@
+body {
+  text-align: center;
+  background-color: #8ef0b79a;
+}
 .date-container {
   margin-bottom: 10px;
-  background-color: #00c853;
+  background-color: #8ef0b7;
   border: 3px solid black;
+  border-radius: 20px;
   margin-top: 0;
 }
 h3 {
   color: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
   background-color: #757575;
   padding: 10px;
   margin-top: 0;
+  font-size: 20px;
   text-align: center;
 }
 .transaction {
+  background-color: #00c853;
   padding: 5px;
   margin: 1px;
-  border: 1px solid darkgreen;
+  border: 2px solid darkgreen;
   text-align: center;
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
 }
 p {
   text-align: center;
+}
+#p {
+  color: #fff;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background-color: #757575;
+  padding: 10px;
+  margin: 0;
+  font-size: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+button {
+  border-radius: 10px;
+  color: white;
+  background-color: red;
+  border: 2px solid red;
+  height: 45px;
+  width: 200px;
+  cursor: pointer;
+  margin: auto;
 }

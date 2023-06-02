@@ -11,10 +11,12 @@
     <% if (alltransactions.length > 0) { %>
     <ul class="cart__item-list">
       <% alltransactions.forEach(t => { %>
-        <li class="cart__item">
-          <h1><%= t.name %></h1>
-          <h2>Roba: <%= t.type %></h2> <h2>Kolicina: <%= t.quantity %></h2>   <h2>Cena: <%= t.price %></h2>
-        </li> 
+      <li class="cart__item">
+        <h1><%= t.name %></h1>
+        <h2>Roba: <%= t.type %></h2>
+        <h2>Kolicina: <%= t.quantity %></h2>
+        <h2>Cena: <%= t.price %></h2>
+      </li>
       <% }) %>
     </ul>
 
