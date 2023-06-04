@@ -10,7 +10,9 @@ exports.getMainPage = (req, res, next) => {
   });
 };
 exports.getUserInfo = async (req, res, next) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   const name = req.params.userName;
+
   try {
     const [user] = await User.find({ name: name });
 
@@ -74,13 +76,59 @@ exports.getUserInfo = async (req, res, next) => {
 };
 
 exports.getAllTransactions = (req, res, next) => {
+  function groupTransactions(transactions) {
+    const groupedTransactions = {};
+
+    transactions.forEach((transaction) => {
+      const { name, price, quantity, type } = transaction;
+      const debt = quantity * price;
+      const date = new Date(transaction.createdAt).toLocaleDateString(
+        "sr-Latn-RS",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "long",
+        }
+      );
+      const unConvertedDate = new Date(transaction.createdAt);
+
+      if (!groupedTransactions[date]) {
+        groupedTransactions[date] = {
+          transactions: [],
+        };
+      }
+
+      groupedTransactions[date].transactions.push({
+        name,
+        date,
+        price,
+        quantity,
+        debt,
+        type,
+        unConvertedDate,
+      });
+    });
+
+    return groupedTransactions;
+  }
+
+  // Group transactions
   Transaction.find().then((result) => {
     if (!result) {
       return res.redirect("../views/admin/mainPage");
     }
+    const groupedTransactions = groupTransactions(result);
+    const dates = Object.keys(groupedTransactions);
+    const data = {};
 
+    dates.forEach((date) => {
+      data[date] = groupedTransactions[date].transactions;
+    });
     res.render("../views/admin/all-transactions-admin", {
       alltransactions: result,
+      dates: dates,
+      data: data,
     });
   });
 };
@@ -164,6 +212,8 @@ exports.postAddTransaction = (req, res, next) => {
     .then((result) => {
       // console.log(result);
       console.log("Created Product");
+      if (req.body.isLocal == "true")
+        return res.redirect("/admin/user/" + name);
       return res.redirect("/admin/allUsers");
     })
     .catch((er) => {

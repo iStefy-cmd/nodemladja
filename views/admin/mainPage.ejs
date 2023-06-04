@@ -4,35 +4,129 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="css/css.css" />
+
+    <style>
+      body {
+        background-color: lightgreen;
+      }
+      .transaction-form {
+        margin-bottom: 50px;
+        display: grid;
+        border-radius: 20px;
+        border: 2px solid black;
+        grid-template-columns: 25%25%25%25%;
+        padding-block: 20px;
+        row-gap: 20px;
+        text-align: center;
+        font-size: 18px;
+        background-color: #00c853;
+      }
+      .transaction-form input {
+        border-radius: 5px;
+        height: 30px;
+        border: none;
+      }
+
+      .transaction-form button,
+      .transaction-form a {
+        cursor: pointer;
+        width: 220px;
+        padding-block: 4px;
+        border-radius: 12px;
+        margin: auto;
+        background-color: darkgreen;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border: 1px solid green;
+      }
+
+      .transaction-form a {
+        font-size: 20px;
+      }
+      .users-holder {
+        display: grid;
+        grid-template-columns: 20%20%20%20%20%;
+      }
+      .users-holder a div {
+        display: flex;
+        justify-content: center;
+        background-color: #00c853;
+        width: 250px;
+        height: 70px;
+        text-align: center;
+        font-size: 15px;
+        border: 2px solid black;
+        border-radius: 15px;
+      }
+      .logout-form {
+        position: absolute;
+        top: 80px;
+        right: 72px;
+      }
+      .logout-form button {
+        cursor: pointer;
+        width: 220px;
+        padding-block: 4px;
+        border-radius: 12px;
+        margin: auto;
+        background-color: darkgreen;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border: 2px solid black;
+      }
+    </style>
   </head>
   <body>
     <header>
-      <form action="/admin/post-add-transaction" method="POST">
-        <label for="name">Ime</label>
-        <input type="text" name="name" />
-        <label for="type">Roba</label>
-        <input type="text" name="type" />
-        <label for="quantity">Kolicina</label>
-        <input type="text" name="quantity" />
-        <label for="price">Cena</label>
-        <input type="text" name="price" />
-        <div></div>
-        <button type="submit">Potvrdi</button>
-        <a href="/admin/transactions">Transakcije</a>
-        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-      </form>
-      <form action="/logout" method="POST">
-        <button type="submit">Logout</button>
-        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-      </form>
+      <div class="form">
+        <form
+          class="transaction-form"
+          action="/admin/post-add-transaction"
+          method="POST"
+        >
+          <div>
+            <label for="name">Ime</label> <input type="text" name="name" />
+          </div>
+          <div>
+            <label for="type">Roba</label> <input type="text" name="type" />
+          </div>
+          <div>
+            <label for="quantity">Kolicina</label>
+            <input type="text" name="quantity" />
+          </div>
+          <div>
+            <label for="price">Cena</label> <input type="text" name="price" />
+          </div>
+
+          <div></div>
+          <button type="submit">Potvrdi</button>
+          <a href="/admin/transactions">Transakcije</a>
+          <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+        </form>
+        <div class="logout-form">
+          <form action="/logout" method="POST">
+            <button
+              style="
+                background-color: rgb(218, 58, 58);
+                color: rgb(255, 255, 255);
+              "
+              type="submit"
+            >
+              Logout
+            </button>
+            <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+          </form>
+        </div>
+      </div>
       <% if(names&& names[0]) { %>
       <div class="users-holder">
         <% names.forEach(name=>{ %>
         <a
           href="/admin/user/<%= name %>"
           style="text-decoration: none; color: black"
-          ><div><h1 style="margin-block: 60px"><%= name %></h1></div></a
+          ><div><h1><%= name %></h1></div></a
         >
         <%})%>
       </div>

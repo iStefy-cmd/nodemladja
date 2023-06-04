@@ -4,22 +4,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+
+    <style>
+
+ a{
+  text-decoration: none;
+  color: black;
+  font-size: 25px;
+ }
+      body{
+  background-color: #8ef0b79a;text-align: center;
+      }
+      #name {
+        margin-left: 30px;
+      }
+      #date{
+        margin-right: 30px;
+      }
+      .cart__item {
+        display: grid;
+        grid-template-columns: 20%20%20%20%20%;
+      
+        background-color: #00c853;
+        margin-block: 6px;
+  border-radius: 20px;
+  border: 2px solid black;
+  padding-block: 13px;
+  margin-inline: 7px;
+  row-gap: 0px;
+  font-size: 16px;
+  background-color: #00c853;
+      }
+      .cart__item h2 {
+        margin:0; margin: auto;
+      
+      }
+      .date-container {
+  margin-bottom: 10px;
+  background-color: #8ef0b7;
+  border: 3px solid black;
+  border-radius: 20px;
+  margin-top: 0;
+}
+h3 {
+  color: #fff;
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+  background-color: #757575;
+  padding: 10px;
+  margin-top: 0;font-size: 20px;
+  text-align: center;
+}
+    </style>
   </head>
   <body>
-    <h1>ALL TRANSACTIONS HERE</h1>
+    <h1>SVE TRANSAKCIJE</h1>
     <a href="/admin/main">MAIN PAGE</a>
     <% if (alltransactions.length > 0) { %>
-    <ul class="cart__item-list">
-      <% alltransactions.forEach(t => { %>
-      <li class="cart__item">
-        <h1><%= t.name %></h1>
-        <h2>Roba: <%= t.type %></h2>
-        <h2>Kolicina: <%= t.quantity %></h2>
-        <h2>Cena: <%= t.price %></h2>
-      </li>
-      <% }) %>
-    </ul>
+    
+<% for (const date of dates) { %>
+  
+    <div class="date-container">
+      <div class="date-header">
+        <h3><%= date %></h3>
+      </div>
+      <div class="transactions-container">
 
+        <% const transactions = data[date]; %>
+        <% transactions.forEach(t => { %>
+          
+          <div class="cart__item">
+            
+            <h2 id="name"><%= t.name %></h1>
+              <h2 id="type">Roba: <%= t.type %></h2>
+              <h2 id="quantity">Kolicina: <%= t.quantity %></h2>
+              <h2 id="price">Cena: <%= t.price %></h2>
+              <h2 id="date">Datum: <%= new Date(t.unConvertedDate).getDate()%>.<%= new Date(t.unConvertedDate).getMonth() + 1%>.<%= new Date(t.unConvertedDate).getYear()%></h2>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
     <% } else { %>
     <h1>No alltransactions in Cart!</h1>
     <% } %>

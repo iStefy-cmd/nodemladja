@@ -71,6 +71,8 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   if (err && err.code === "EBADCSRFTOKEN") {
     // CSRF token validation failed, handle the error here
+    console.log("greska u csrf");
+
     res.redirect("/login");
   } else {
     next(err);

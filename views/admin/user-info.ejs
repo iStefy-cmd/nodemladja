@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      .name-and-debt{
+
+        margin-top: 30px;
+        margin-bottom: 20px;
+      }h1{
+        margin:0;
+      }
       body{
         text-align: center;
   background-color: #8ef0b79a;
@@ -126,28 +133,69 @@ h3 {
   padding-block: 12px;
   background-color: green;
   text-decoration: none;
-  border:2px solid green;
+  border:2px solid black;
   border-radius: 10px;
   color: white;
   width: 200px;  margin: auto;
 }
 #d{
-  border-radius: 10px;
-  color: white;
-  background-color: red;
-  border:2px solid red ;
-  height: 45px;
   width: 200px;
-  cursor: pointer;
-  margin: auto;
+  padding-block: 4px;
+  border-radius: 12px;
+  margin: auto;cursor: pointer;
+  background-color: red;
+  color: white;
+  margin-left: 10px;
+  
+  text-decoration: none;
+  font-size: 18px;
+  border: 2px solid rgb(0, 0, 0);
 }
+
+/* forma */
+.transaction-form{
+  margin-block: 17px;
+  display: grid;
+  border-radius: 20px;
+  border: 2px solid black;
+  grid-template-columns: 33%33%33%;
+  padding-block: 20px;
+  row-gap: 20px;
+  font-size: 18px;
+  background-color: #00c853;
+}
+.transaction-form input{
+  border-radius: 5px;
+  height: 30px;
+  border:none;
+}
+
+.transaction-form button, .transaction-form a{
+  width: 220px;
+  padding-block: 4px;
+  border-radius: 12px;
+  margin: auto;cursor: pointer;
+  background-color: darkgreen;
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid green;
+}
+
+.transaction-form a{
+  font-size: 20px;
+}
+
+
     </style>
   <body>
     <%if(user){%>
     <div class="name-and-debt">
       <h1 class="user-name"><%= user.name %></h1>
-      <h1 class="user-debt"><%= user.debt %> din</h1>
     </div>
+
+
+    
     <div class="popup-container none">
       <div class="popup">
         
@@ -174,14 +222,31 @@ h3 {
 
     <div class="hrefs">
       <a id="main-page" href="/admin/main">MAIN PAGE</a
-      ><button class="confirm" id="d" onclick="Action(event)">
-        Delete Profile
-      </button>
+      >
+      <h1 id="debt"><%=user.debt%> din</h1>
       <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
     </div>
-    <div class="user-forms">
-      <form action="/admin/"></form>
-    </div>
+
+     <form class="transaction-form" action="/admin/post-add-transaction" method="POST">
+      <input type="hidden" name="name" value="<%= user.name%>">
+      <input type="hidden" name="isLocal" value="true">
+         <div> <label for="type">Roba</label>
+          <input type="text" name="type" /></div> 
+         <div> <label for="quantity">Kolicina</label>
+          <input type="text" name="quantity" /></div>
+          <div><label for="price">Cena</label>
+            <input type="text" name="price" /></div> 
+       
+       
+        
+       
+            <a href="/admin/transactions">Transakcije</a>
+        <button type="submit">Potvrdi</button>
+        <div><button class="confirm" id="d" onclick="Action(event)">
+          Delete Profile
+        </button></div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+      </form>
     <div class="user-transactions">
       <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
       { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
