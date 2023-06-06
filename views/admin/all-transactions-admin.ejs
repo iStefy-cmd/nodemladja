@@ -6,85 +6,164 @@
     <title>Document</title>
 
     <style>
-
- a{
-  text-decoration: none;
-  color: black;
-  font-size: 25px;
- }
-      body{
-  background-color: #8ef0b79a;text-align: center;
+      a {
+        text-decoration: none;
+        color: white;
+        font-size: 25px;
+        background-color: green;
+        border: 2px black solid;
+        border-radius: 10px;
+        padding-inline: 34px;
+      }
+      .mainpagehref {
+        margin-bottom: 20px;
+      }
+      body {
+        background-color: #8ef0b79a;
+        text-align: center;
       }
       #name {
         margin-left: 30px;
       }
-      #date{
+      #date {
         margin-right: 30px;
       }
-      .cart__item {
-        display: grid;
-        grid-template-columns: 20%20%20%20%20%;
-      
+
+      .transaction {
         background-color: #00c853;
-        margin-block: 6px;
-  border-radius: 20px;
-  border: 2px solid black;
-  padding-block: 13px;
-  margin-inline: 7px;
-  row-gap: 0px;
-  font-size: 16px;
-  background-color: #00c853;
+        padding: 5px;
+        margin: 1px;
+        border: 2px solid darkgreen;
+        text-align: center;
+        display: grid;
+        grid-template-columns: 20% 20% 20% 20% 20%;
       }
-      .cart__item h2 {
-        margin:0; margin: auto;
-      
+      p {
+        text-align: center;
       }
+      .transaction p {
+        font-weight: bold;
+        font-size: 23px;
+      }
+      .descripted-deposit-transaction {
+        background-color: rgb(199, 99, 85);
+        padding: 5px;
+        margin: 1px;
+        border: 2px solid rgb(233, 5, 5);
+        text-align: center;
+        display: grid;
+        grid-template-columns: 20%40%13%34%;
+      }
+      .deposit-transaction {
+        background-color: rgb(199, 99, 85);
+        padding: 5px;
+        margin: 1px;
+        border: 2px solid rgb(233, 5, 5);
+        text-align: center;
+        display: grid;
+        grid-template-columns: 20%20%33%34%;
+      }
+      .deposit-transaction p {
+        font-weight: bold;
+
+        font-size: 23px;
+      }
+
       .date-container {
-  margin-bottom: 10px;
-  background-color: #8ef0b7;
-  border: 3px solid black;
-  border-radius: 20px;
-  margin-top: 0;
-}
-h3 {
-  color: #fff;
-  border-top-left-radius: 16px; border-top-right-radius: 16px;
-  background-color: #757575;
-  padding: 10px;
-  margin-top: 0;font-size: 20px;
-  text-align: center;
-}
+        margin-bottom: 10px;
+        background-color: #8ef0b7;
+        border: 3px solid black;
+        border-radius: 20px;
+        margin-top: 0;
+      }
+      h3 {
+        color: #fff;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        background-color: #757575;
+        padding: 10px;
+        margin-top: 0;
+        font-size: 20px;
+        text-align: center;
+      }
+      .descripted-deposit-transaction p {
+        font-weight: bold;
+        font-size: 23px;
+      }
+      .descripted-deposit-transaction #p1 {
+        margin-left: 45px;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
     <h1>SVE TRANSAKCIJE</h1>
-    <a href="/admin/main">MAIN PAGE</a>
-    <% if (alltransactions.length > 0) { %>
-    
-<% for (const date of dates) { %>
-  
+    <div class="mainpagehref"><a href="/admin/main">MAIN PAGE</a></div>
+    <% if (alltransactions.length > 0) { %> <% for (const date of dates) { %>
+
     <div class="date-container">
       <div class="date-header">
         <h3><%= date %></h3>
       </div>
       <div class="transactions-container">
+        <% const transactions = data[date]; %> <%
+        transactions.forEach(transaction => { %>
 
-        <% const transactions = data[date]; %>
-        <% transactions.forEach(t => { %>
-          
-          <div class="cart__item">
+        <!-- <div class="cart__item">
             
-            <h2 id="name"><%= t.name %></h1>
-              <h2 id="type">Roba: <%= t.type %></h2>
-              <h2 id="quantity">Kolicina: <%= t.quantity %></h2>
-              <h2 id="price">Cena: <%= t.price %></h2>
-              <h2 id="date">Datum: <%= new Date(t.unConvertedDate).getDate()%>.<%= new Date(t.unConvertedDate).getMonth() + 1%>.<%= new Date(t.unConvertedDate).getYear()%></h2>
-          </div>
-        <% }) %>
+            <h2 id="name"><%= transaction.name %></h1>
+              <h2 id="type">Roba: <%= transaction.type %></h2>
+              <h2 id="quantity">Kolicina: <%= transaction.quantity %></h2>
+              <h2 id="price">Cena: <%= transaction.price %></h2>
+              <h2 id="date">Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new Date(transaction.unConvertedDate).getYear()%></h2>
+          </div> -->
+
+        <% if(transaction.type === "uplata") {%>
+        <%if(transaction.description.length>2){%>
+        <div class="descripted-deposit-transaction">
+          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <p id="p1">Opis: <%=transaction.description%></p>
+          <p style="text-align: right; padding-right: 5px">
+            <%= transaction.deposit %> din
+          </p>
+          <h2 id="date">
+            Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new
+            Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new
+            Date(transaction.unConvertedDate).getYear()%>
+          </h2>
+        </div>
+
+        <%}else{%>
+        <div class="deposit-transaction">
+          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <p>Uplata</p>
+
+          <p style="text-align: right; padding-right: 5px">
+            <%= transaction.deposit %> din
+          </p>
+          <h2 id="date">
+            Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new
+            Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new
+            Date(transaction.unConvertedDate).getYear()%>
+          </h2>
+        </div>
+        <%}%> <%} else {%>
+        <div class="transaction">
+          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <h2 id="type">Roba: <%= transaction.type %></h2>
+          <h2 id="quantity">Kolicina: <%= transaction.quantity %></h2>
+          <h2 id="price">Cena: <%= transaction.price %></h2>
+          <h2 id="date">
+            Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new
+            Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new
+            Date(transaction.unConvertedDate).getYear()%>
+          </h2>
+        </div>
+
+        <%}%> <% }) %>
       </div>
     </div>
-  <% } %>
-    <% } else { %>
+    <% } %> <% } else { %>
     <h1>No alltransactions in Cart!</h1>
     <% } %>
   </body>

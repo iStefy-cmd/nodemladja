@@ -34,7 +34,8 @@ exports.getUserInfo = async (req, res, next) => {
             weekday: "long",
           }
         );
-
+        const deposit = transaction.deposit;
+        const description = transaction.description;
         const quantity = transaction.quantity;
         const price = transaction.price;
         const type = transaction.type;
@@ -55,6 +56,8 @@ exports.getUserInfo = async (req, res, next) => {
           quantity,
           type,
           transactionID,
+          description,
+          deposit,
         });
 
         // Add the debt of the current transaction to the total debt for that date
@@ -82,6 +85,8 @@ exports.getAllTransactions = (req, res, next) => {
     transactions.forEach((transaction) => {
       const { name, price, quantity, type } = transaction;
       const debt = quantity * price;
+      const deposit = transaction.deposit;
+      const description = transaction.description;
       const date = new Date(transaction.createdAt).toLocaleDateString(
         "sr-Latn-RS",
         {
@@ -106,6 +111,8 @@ exports.getAllTransactions = (req, res, next) => {
         quantity,
         debt,
         type,
+        deposit,
+        description,
         unConvertedDate,
       });
     });
@@ -136,6 +143,7 @@ exports.postDeleteRequest = (req, res, next) => {
   const userID = req.query.userID;
   const transactionID = req.query.transactionID;
   let finalDebt;
+  let transactions;
   User.find({ _id: userID })
     .then((us) => {
       const currentTransaction = us[0].transactions.filter(
@@ -149,14 +157,23 @@ exports.postDeleteRequest = (req, res, next) => {
       finalDebt = us[0].debt - debt;
 
       us[0].debt = finalDebt;
-
+      transactions = us[0].transactions;
       return us[0].save();
     })
     .then((result) => {
       Transaction.deleteOne({ _id: transactionID }).then(() => {
-        return res
-          .status(200)
-          .json({ message: "deleted successfully", debt: finalDebt });
+        if (!transactions[0]) {
+          User.findByIdAndDelete(userID).then(() => {
+            return res.status(200).json({
+              message: "deleted profile successfully",
+              debt: finalDebt,
+            });
+          });
+        } else {
+          return res
+            .status(200)
+            .json({ message: "deleted successfully", debt: finalDebt });
+        }
       });
     })
     .catch((er) => {
@@ -164,61 +181,122 @@ exports.postDeleteRequest = (req, res, next) => {
     });
 };
 exports.postAddTransaction = (req, res, next) => {
-  const name = req.body.name;
-  const type = req.body.type;
-  const quantity = req.body.quantity;
-  const price = req.body.price;
+  if (req.body.deposit) {
+    const name = req.body.name;
+    const type = "uplata";
+    const quantity = -req.body.deposit;
+    const price = 1;
+    const description = req.body.description;
+    const deposit = -req.body.deposit;
 
-  User.findOne({ name: name })
-    .then((res) => {
-      let userID = res ? res._id : "";
-      let user = res ? res : "";
-      if (!res) {
-        user = new User({
-          email: "fake",
-          password: "fake",
+    User.findOne({ name: name })
+      .then((res) => {
+        let userID = res ? res._id : "";
+        let user = res ? res : "";
+        if (!res) {
+          return res.redirect("admin");
+        }
+
+        const transaction = new Transaction({
           name: name,
-          transactions: [],
-          debt: 0,
+          type: type,
+          quantity: quantity,
+          price: price,
+          userID: userID,
+          description: description,
+          deposit: deposit,
         });
-        userID = user._id;
-      }
 
-      const transaction = new Transaction({
-        name: name,
-        type: type,
-        quantity: quantity,
-        price: price,
-        userID: userID,
-      });
-
-      user.transactions.push({
-        type: type,
-        quantity: quantity,
-        price: price,
-        transactionID: transaction._id,
-      });
-      user.debt += price * quantity;
-
-      return user
-        .save()
-        .then((res1) => {
-          return transaction.save();
-        })
-        .catch((res) => {
-          return user.deleteOne({ _id: userID });
+        user.transactions.push({
+          type: type,
+          quantity: quantity,
+          price: price,
+          description: description,
+          deposit: deposit,
+          transactionID: transaction._id,
         });
-    })
-    .then((result) => {
-      // console.log(result);
-      console.log("Created Product");
-      if (req.body.isLocal == "true")
-        return res.redirect("/admin/user/" + name);
-      return res.redirect("/admin/allUsers");
-    })
-    .catch((er) => {
-      console.log(er);
-    });
+        user.debt += deposit;
+
+        return user
+          .save()
+          .then((res1) => {
+            return transaction.save();
+          })
+          .catch((res12) => {
+            console.log("transakcija se nije sacuvala u svim transakcijama");
+          });
+      })
+      .then((result) => {
+        // console.log(result);
+        console.log("Created Product");
+        if (req.body.isLocal == "true")
+          return res.redirect("/admin/user/" + name);
+        return res.redirect("/admin/allUsers");
+      })
+      .catch((er) => {
+        console.log(er);
+      });
+  } else {
+    const name = req.body.name;
+    const type = req.body.type;
+    const quantity = req.body.quantity;
+    const price = req.body.price;
+    const description = "notdeposit";
+    const deposit = 0;
+
+    User.findOne({ name: name })
+      .then((res) => {
+        let userID = res ? res._id : "";
+        let user = res ? res : "";
+        if (!res) {
+          user = new User({
+            email: "fake",
+            password: "fake",
+            name: name,
+            transactions: [],
+            debt: 0,
+          });
+          userID = user._id;
+        }
+
+        const transaction = new Transaction({
+          name: name,
+          type: type,
+          quantity: quantity,
+          price: price,
+          deposit: deposit,
+          description: description,
+          userID: userID,
+        });
+
+        user.transactions.push({
+          type: type,
+          quantity: quantity,
+          price: price,
+          transactionID: transaction._id,
+        });
+        user.debt += price * quantity;
+
+        return user
+          .save()
+          .then((res1) => {
+            return transaction.save();
+          })
+          .catch((res) => {
+            return user.deleteOne({ _id: userID });
+          });
+      })
+      .then((result) => {
+        // console.log(result);
+        console.log("Created Product");
+        if (req.body.isLocal == "true")
+          return res.redirect("/admin/user/" + name);
+        return res.redirect("/admin/allUsers");
+      })
+      .catch((er) => {
+        console.log(er);
+      });
+  }
 };
 exports.postDeleteProfile = (req, res, next) => {
   const id = req.params.id;

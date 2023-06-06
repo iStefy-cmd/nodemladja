@@ -4,7 +4,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <style>
+      body {
+        font-family: 'Roboto Condensed', sans-serif;
+      }
       .name-and-debt{
 
         margin-top: 30px;
@@ -42,6 +46,33 @@ h3 {
 }p{
   text-align: center;
 }
+.transaction p {
+  font-weight: bold;
+  font-size: 23px;
+}
+.descripted-deposit-transaction {
+  background-color: rgb(199, 99, 85);
+  padding: 5px;
+  margin: 1px;
+  border: 2px solid rgb(233, 5, 5);
+  text-align: center;
+  display: grid;
+  grid-template-columns: 45%10%70%;
+}
+.deposit-transaction {
+  background-color: rgb(199, 99, 85);
+  padding: 5px;
+  margin: 1px;
+  border: 2px solid rgb(233, 5, 5);
+  text-align: center;
+  display: grid;
+  grid-template-columns: 20%60%20%;
+}
+.deposit-transaction p {
+  font-weight: bold;
+  font-size: 23px;
+}
+
 #p { color: #fff;
   border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
   background-color: #757575;
@@ -52,7 +83,8 @@ h3 {
   text-align: center;
 }
 #delete{
-  margin: 0;
+  margin: 0;color: white;
+  font-weight: bold;
      width: 200px;
      height: 30px;
      margin: auto;
@@ -139,8 +171,8 @@ h3 {
   width: 200px;  margin: auto;
 }
 #d{
-  width: 200px;
-  padding-block: 4px;
+  width: 220px;
+  padding-block: 12px;
   border-radius: 12px;
   margin: auto;cursor: pointer;
   background-color: red;
@@ -158,10 +190,10 @@ h3 {
   display: grid;
   border-radius: 20px;
   border: 2px solid black;
-  grid-template-columns: 33%33%33%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   padding-block: 20px;
   row-gap: 20px;
-  font-size: 18px;
+  font-size: 21px;font-weight: bold;
   background-color: #00c853;
 }
 .transaction-form input{
@@ -169,8 +201,12 @@ h3 {
   height: 30px;
   border:none;
 }
-
-.transaction-form button, .transaction-form a{
+.transaction-form div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.transaction-form button{
   width: 220px;
   padding-block: 4px;
   border-radius: 12px;
@@ -182,16 +218,61 @@ h3 {
   border: 1px solid green;
 }
 
-.transaction-form a{
-  font-size: 20px;
+input {
+  margin-left: 8px;
+}
+/* deposit form */
+
+.deposit-transaction-form{
+  margin-block: 17px; 
+  display: grid;
+  border-radius: 20px;
+  border: 2px solid black;
+  grid-template-columns: 33%33%33%;
+  padding-block: 20px;
+  row-gap: 20px;
+  font-weight: bold;
+  font-size: 21px;
+  background-color: rgb(199, 99, 85);
+}
+.deposit-transaction-form div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deposit-transaction-form input{
+  border-radius: 5px;
+  height: 30px;
+  border:none;
 }
 
+.deposit-transaction-form button{
+  width: 220px;
+  padding-block: 4px;
+  border-radius: 12px;
+  margin: auto;cursor: pointer;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  border: 2px solid rgb(0, 0, 0);
+  
+}
+.descripted-deposit-transaction p {
+ 
+  font-weight: bold;
+  font-size: 23px;
+}
+.descripted-deposit-transaction #p1 {
+  margin-left: 45px;
+  text-align: left;
+}
 
     </style>
   <body>
     <%if(user){%>
     <div class="name-and-debt">
-      <h1 class="user-name"><%= user.name %></h1>
+      <h1 class="user-name">Korisnik: <%= user.name %></h1>
     </div>
 
 
@@ -220,14 +301,10 @@ h3 {
       }
     </script>
 
-    <div class="hrefs">
-      <a id="main-page" href="/admin/main">MAIN PAGE</a
-      >
-      <h1 id="debt"><%=user.debt%> din</h1>
-      <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
-    </div>
+<h1 id="debt">Stanje: <%=user.debt%> din</h1>
+    
 
-     <form class="transaction-form" action="/admin/post-add-transaction" method="POST">
+    <form class="transaction-form" action="/admin/post-add-transaction" method="POST">
       <input type="hidden" name="name" value="<%= user.name%>">
       <input type="hidden" name="isLocal" value="true">
          <div> <label for="type">Roba</label>
@@ -240,13 +317,32 @@ h3 {
        
         
        
-            <a href="/admin/transactions">Transakcije</a>
         <button type="submit">Potvrdi</button>
-        <div><button class="confirm" id="d" onclick="Action(event)">
-          Delete Profile
-        </button></div>
+       
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
       </form>
+      <div class="hrefs">
+        <a id="main-page" href="/admin/main">MAIN PAGE</a
+        >
+        <div><button class="confirm" id="d" onclick="Action(event)">
+          Obrisi Profil
+        </button></div>
+        <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
+      </div>
+      
+      <!-- paying form -->
+      <div><form class="deposit-transaction-form" action="/admin/post-add-transaction" method="POST">
+        <input type="hidden" name="name" value="<%= user.name%>">
+        <input type="hidden" name="isLocal" value="true">
+        <div> <label for="deposit">Uplata</label>
+          <input type="text" name="deposit" /></div>
+        <div> <label for="description">Dodatne informacije</label>
+            <input type="text" name="description" /></div> 
+          
+ 
+          <button type="submit">Potvrdi</button>
+          <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+        </form></div>
     <div class="user-transactions">
       <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
       { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
@@ -255,27 +351,80 @@ h3 {
         <% const transactions = transactionsGrouped[date].transactions; %> <%
         const totalDebt = transactionsGrouped[date].totalDebt; %> <%
         transactions.forEach(transaction => { %>
-        <div class="transaction">
-          <p>Type: <%= transaction.type %></p>
-          <p>Price: <%= transaction.price %> din</p>
-          <p>Kolicina: <%= transaction.quantity %> unit</p>
-
-          <p>Dug: <%= transaction.debt %> din</p>
-          <button
-            id="delete"
-            onclick="postDeleteTransaction(this)"
-            type="submit"
-          >
-            DELETE
-          </button>
-          <input
-            type="hidden"
-            value="<%= transaction.transactionID %>"
-            name="transactionID"
-          />
-          <input type="hidden" value="<%= csrfToken %>" name="_csrf" />
-          <input type="hidden" value="<%= user._id%>" name="userID" />
-        </div>
+        <% if(transaction.type === "uplata") {%>
+         
+          <%if(transaction.description.length>2){%>
+            <div class="descripted-deposit-transaction">
+              
+             
+    
+              <p id="p1">Opis: <%=transaction.description%></p>
+              <p style="padding-left: 10px;"><%= transaction.deposit %> din</p>
+              <button
+                id="delete"
+                onclick="postDeleteTransaction(this)"
+                type="submit"
+              >
+               OBRISI
+              </button>
+              <input
+                type="hidden"
+                value="<%= transaction.transactionID %>"
+                name="transactionID"
+              />
+              <input type="hidden" value="<%= csrfToken %>" name="_csrf" />
+              <input type="hidden" value="<%= user._id%>" name="userID" />
+            </div>
+            
+            
+            
+            <%}else{%>
+            <div class="deposit-transaction">
+              <p>Uplata</p>
+             
+    
+              <p style="padding-left: 10px;"> <%= transaction.deposit %> din</p>
+              <button
+                id="delete"
+                onclick="postDeleteTransaction(this)"
+                type="submit"
+              >
+               OBRISI
+              </button>
+              <input
+                type="hidden"
+                value="<%= transaction.transactionID %>"
+                name="transactionID"
+              />
+              <input type="hidden" value="<%= csrfToken %>" name="_csrf" />
+              <input type="hidden" value="<%= user._id%>" name="userID" />
+            </div><%}%>
+         
+          
+          <%} else {%>
+          <div class="transaction">
+            <p>Type: <%= transaction.type %></p>
+            <p>Price: <%= transaction.price %> din</p>
+            <p>Kolicina: <%= transaction.quantity %> unit</p>
+  
+            <p>Dug: <%= transaction.debt %> din</p>
+            <button
+              id="delete"
+              onclick="postDeleteTransaction(this)"
+              type="submit"
+            >
+             OBRISI
+            </button>
+            <input
+              type="hidden"
+              value="<%= transaction.transactionID %>"
+              name="transactionID"
+            />
+            <input type="hidden" value="<%= csrfToken %>" name="_csrf" />
+            <input type="hidden" value="<%= user._id%>" name="userID" />
+          </div>
+          
+          <%}%>
         <% }) %>
 
         <p id="p">Dug za ovaj Dan: <%= totalDebt %> din</p>
