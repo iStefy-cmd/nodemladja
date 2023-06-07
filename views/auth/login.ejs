@@ -6,8 +6,9 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/login.css" />
   </head>
-  
-  <body><a class="adminLink" href="admin-login">Admin</a>
+
+  <body>
+    <a class="adminLink" href="admin-login">Admin</a>
     <div class="wrapper">
       <% if(!isAuthenticated) {%>
       <h1>Prijavite se</h1>
@@ -23,7 +24,7 @@
 
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         <div class="register">
-          Nemate nalog? <a href="/register">Registrujte se</a>
+          Ne znate podatke? <a href="/auth-info-change">Promena podataka</a>
         </div>
       </form>
       <%} else {%>

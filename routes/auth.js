@@ -17,16 +17,16 @@ router.post(
   authController.postLogin
 );
 router.get(
-  "/register",
+  "/auth-info-change",
   isNotLoggedIn,
 
-  authController.getRegister
+  authController.getAuthInfoChange
 );
 router.post(
-  "/register",
+  "/auth-info-change",
   isNotLoggedIn,
 
-  authController.postRegister
+  authController.postAuthInfoChange
 );
 
 router.get(

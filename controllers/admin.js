@@ -1,7 +1,8 @@
 const User = require("../models/user");
 
 const Transaction = require("../models/transaction");
-const USER_TRANSACTIONS_PER_PAGE = 2;
+const bcrypt = require("bcryptjs");
+
 exports.getMainPage = (req, res, next) => {
   User.find().then((users) => {
     res.render("../views/admin/mainPage", {
@@ -243,22 +244,54 @@ exports.postAddTransaction = (req, res, next) => {
     const price = req.body.price;
     const description = "notdeposit";
     const deposit = 0;
-
     User.findOne({ name: name })
       .then((res) => {
         let userID = res ? res._id : "";
         let user = res ? res : "";
         if (!res) {
-          user = new User({
-            email: "fake",
-            password: "fake",
-            name: name,
-            transactions: [],
-            debt: 0,
-          });
-          userID = user._id;
-        }
+          bcrypt
+            .hash(`${name.replace(" ", "").toLowerCase()}`, 12)
+            .then((hashedPw) => {
+              user = new User({
+                email: `${name.trim().toLowerCase().slice(-2)}email${name
+                  .trim()
+                  .toLowerCase()
+                  .slice(0, 2)}@email.com`,
+                password: hashedPw,
+                name: name,
+                transactions: [],
+                debt: 0,
+              });
+              userID = user._id;
+              const transaction = new Transaction({
+                name: name,
+                type: type,
+                quantity: quantity,
+                price: price,
+                deposit: deposit,
+                description: description,
+                userID: userID,
+              });
 
+              user.transactions.push({
+                type: type,
+                quantity: quantity,
+                price: price,
+                transactionID: transaction._id,
+              });
+              user.debt += price * quantity;
+
+              user
+                .save()
+                .then((res1) => {
+                  return transaction.save();
+                })
+                .catch((res) => {
+                  return user.deleteOne({ _id: userID });
+                });
+            });
+        } else{
+          
         const transaction = new Transaction({
           name: name,
           type: type,
@@ -285,6 +318,7 @@ exports.postAddTransaction = (req, res, next) => {
           .catch((res) => {
             return user.deleteOne({ _id: userID });
           });
+        }
       })
       .then((result) => {
         // console.log(result);
@@ -315,3 +349,5 @@ exports.postDeleteProfile = (req, res, next) => {
       console.log(er);
     });
 };
+
+

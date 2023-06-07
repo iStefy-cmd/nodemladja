@@ -35,42 +35,77 @@ exports.postLogin = (req, res, next) => {
     });
 };
 
-exports.getRegister = (req, res, next) => {
-  res.render("auth/register", {});
+exports.getAuthInfoChange = (req, res, next) => {
+  res.render("auth/auth-info-change", {});
 };
-exports.postRegister = (req, res, next) => {
+exports.postAuthInfoChange = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const name = req.body.name;
+  const newPassword = req.body.newpassword;
+  const newPasswordConfirmation = req.body.newpasswordconfirmation;
 
-  User.findOne({ $or: [{ email: email }, { name: name }] })
-    .then((user) => {
-      if (user) {
-        res.redirect("/login");
-        throw new Error("korisnik vec postoji");
+  if (newPassword === newPasswordConfirmation) {
+    User.findOne({ email: email }).then((user) => {
+      if (!user) {
+        res.redirect("/auth-info-change");
+        throw new Error("korisnik ne postoji");
       }
-      bcrypt
-        .hash(password, 12)
-        .then((hashedPw) => {
-          const user = new User({
-            email: email,
-            password: hashedPw,
-            name: name,
-            transactions: [],
-            debt: 0,
+      bcrypt.compare(password, user.password).then((doMatch) => {
+        if (doMatch) {
+          bcrypt.hash(newPassword, 12).then((hashedPw) => {
+            user.password = hashedPw;
+            if (req.body.newemail !== "") {
+              User.find({ email: req.body.newemail }).then((user1) => {
+                if (!user1[0]) {
+                  user.email = req.body.newemail;
+                  user
+                    .save()
+                    .then(() => {
+                      console.log("info successfully changed");
+                      return res.redirect("login");
+                    })
+                    .catch((er) => {
+                      console.log(er);
+                    });
+                  // ADMIN PRETRAGA, ZA SAD ISKLJUCENA DA NE BI SLALO DODATAN REQUEST BEZVEZE
+                  // Admin.find({ email: email }).then((admin) => {
+                  //   if (!admin[0]) {
+                  //     user.email = req.body.newemail;
+                  //     user
+                  //       .save()
+                  //       .then(() => {
+                  //         console.log("info successfully changed");
+                  //         return res.redirect("login");
+                  //       })
+                  //       .catch((er) => {
+                  //         console.log(er);
+                  //       });
+                  //   }
+                  // });
+                } else {
+                  console.log("email je zauzet, pokusajte sa drugim" + user1);
+                  return res.redirect("auth-info-change");
+                }
+              });
+            } else {
+              user
+                .save()
+                .then(() => {
+                  console.log("info successfully changed");
+                  return res.redirect("login");
+                })
+                .catch((er) => {
+                  console.log(er);
+                });
+            }
           });
-          return user.save();
-        })
-        .then((result) => {
-          res.redirect("/login");
-        })
-        .catch((er) => {
-          console.log(er);
-        });
-    })
-    .catch((er) => {
-      console.log(er);
+        } else {
+          console.log("ne valja email");
+          return res.redirect("/auth-info-change");
+        }
+      });
     });
+  }
 };
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
@@ -83,7 +118,7 @@ exports.getAdminLogin = (req, res, next) => {
 };
 
 exports.postAdminLogin = (req, res, next) => {
-  req.session.cookie.expires = new Date(Date.now() + 1*60 * 60 * 1000);
+  req.session.cookie.expires = new Date(Date.now() + 1 * 60 * 60 * 1000);
   const email = req.body.email;
   const password = req.body.password;
 
