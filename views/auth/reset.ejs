@@ -1,0 +1,38 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+
+  <body>
+    <a class="adminLink" href="admin-login">Admin</a>
+    <div class="wrapper">
+      <% if(!isAuthenticated) {%>
+      <h1>Resetujte Lozinku</h1>
+      <form action="/reset" method="POST">
+        <div class="email">
+          <label for="email">Email</label> <input name="email" type="email" />
+        </div>
+
+        <button type="submit">Resetuj Lozinku</button>
+
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+        <div class="register">
+          <a style="margin-right: 10px" href="/auth-info-change"
+            >Promena podataka
+          </a>
+          <a style="margin-left: 10px" href="/login"> Prijava</a>
+        </div>
+      </form>
+      <%} else {%>
+      <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+      </form>
+      <%}%>
+    </div>
+  </body>
+</html>

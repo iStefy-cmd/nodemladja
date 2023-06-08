@@ -12,10 +12,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
     name: { type: String, required: true },
     transactions: [
       {
-        
         type: {
           type: String,
           required: true,
@@ -32,9 +33,9 @@ const userSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Transaction",
           required: true,
-          
         },
-      },{ timestamps: true }
+      },
+      { timestamps: true },
     ],
     debt: {
       type: Number,
