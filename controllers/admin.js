@@ -2,8 +2,19 @@ const User = require("../models/user");
 
 const Transaction = require("../models/transaction");
 const bcrypt = require("bcryptjs");
-
+const io = require("socket.io-client");
+const socketClient = io("http://localhost:3000");
 exports.getMainPage = (req, res, next) => {
+  socketClient.on("req", (reqe) => {
+    console.log(reqe);
+
+    console.log("Connected to server");
+  });
+
+  socketClient.on("disconnect", () => {
+    console.log("Disconnected from server");
+  });
+
   User.find().then((users) => {
     res.render("../views/admin/mainPage", {
       names: users.map((u) => u.name),
@@ -290,34 +301,33 @@ exports.postAddTransaction = (req, res, next) => {
                   return user.deleteOne({ _id: userID });
                 });
             });
-        } else{
-          
-        const transaction = new Transaction({
-          name: name,
-          type: type,
-          quantity: quantity,
-          price: price,
-          deposit: deposit,
-          description: description,
-          userID: userID,
-        });
-
-        user.transactions.push({
-          type: type,
-          quantity: quantity,
-          price: price,
-          transactionID: transaction._id,
-        });
-        user.debt += price * quantity;
-
-        return user
-          .save()
-          .then((res1) => {
-            return transaction.save();
-          })
-          .catch((res) => {
-            return user.deleteOne({ _id: userID });
+        } else {
+          const transaction = new Transaction({
+            name: name,
+            type: type,
+            quantity: quantity,
+            price: price,
+            deposit: deposit,
+            description: description,
+            userID: userID,
           });
+
+          user.transactions.push({
+            type: type,
+            quantity: quantity,
+            price: price,
+            transactionID: transaction._id,
+          });
+          user.debt += price * quantity;
+
+          return user
+            .save()
+            .then((res1) => {
+              return transaction.save();
+            })
+            .catch((res) => {
+              return user.deleteOne({ _id: userID });
+            });
         }
       })
       .then((result) => {
@@ -349,5 +359,3 @@ exports.postDeleteProfile = (req, res, next) => {
       console.log(er);
     });
 };
-
-

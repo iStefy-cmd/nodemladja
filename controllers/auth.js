@@ -117,6 +117,8 @@ exports.postAuthInfoChange = (req, res, next) => {
 };
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
+    if (err) console.log(err);
+
     console.log("logout-ed");
     res.redirect("/login");
   });

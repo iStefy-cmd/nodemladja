@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const csrf = require("csurf");
+const socket = require("./socket");
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 const MONGO_URI =
@@ -38,6 +39,15 @@ app.use(
 );
 app.use(csrfProtection);
 app.use((req, res, next) => {
+  // const io = require("socket.io-client");
+  // const socket = io("http://localhost:3000");
+
+  // // Replace "http://example.com" with your server URL
+
+  // socket.on("connect", () => {
+  //   console.log("Connected to server");
+  // });
+
   // throw new Error('Sync Dummy');
   if (!req.session.user) {
     return next();
@@ -86,7 +96,10 @@ app.use("/", (req, res, next) => {
 mongoose
   .connect(MONGO_URI)
   .then((res) => {
-    app.listen(3000);
+    const server = app.listen(3000);
+    socket.init(server).on("connection", () => {
+      console.log("connected");
+    });
   })
   .catch((err) => {
     console.log(err);

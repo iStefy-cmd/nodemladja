@@ -5,14 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/transaction-for-user.css" />
+    <style>
+      .transaction-form {
+        margin-bottom: 50px;
+        display: grid;
+        margin-top: 50px;
+        border-radius: 20px;
+        border: 2px solid black;
+        grid-template-columns: 25%25%25%25%;
+        padding-block: 20px;
+        row-gap: 20px;
+        text-align: center;
+        font-size: 18px;
+        background-color: #00c853;
+      }
+      .transaction-form input {
+        border-radius: 5px;
+        height: 30px;
+        border: none;
+      }
+
+      .transaction-form button,
+      .transaction-form a {
+        cursor: pointer;
+        width: 220px;
+        padding-block: 4px;
+        border-radius: 12px;
+        margin: auto;
+        background-color: darkgreen;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border: 1px solid green;
+      }
+
+      .transaction-form a {
+        font-size: 20px;
+      }
+    </style>
   </head>
   <body>
     <h1><%= user.name%></h1>
     <h1><%= user.debt%> din</h1>
-    <form action="/logout" method="POST">
-      <button type="submit">Logout</button>
-      <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-    </form>
+   
+
+    <div class="form">
+      <form
+        class="transaction-form"
+        action="/user/post-add-transaction"
+        method="POST"
+      >
+       <input type="hidden" name="name" value="<%= user.name%>">
+        <div>
+          <label for="type">Roba</label> <input type="text" name="type" />
+        </div>
+        <div>
+          <label for="quantity">Kolicina</label>
+          <input type="text" name="quantity" />
+        </div>
+        <div>
+          <label for="price">Cena</label> <input type="text" name="price" />
+        </div>
+
+        <button type="submit" style="height: 35px;">Posalji zahtev</button>
+        <div></div>
+        <a href="/admin/transactions">Transakcije</a>
+<div> <form action="/logout" method="POST">
+  <button type="submit" style=" 
+  background-color: rgb(240, 34, 34); height: 35px;">Logout</button>
+  <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+</form></div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+      </form>
+    
+      </div>
+    </div>
 
     <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped) {
     %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>

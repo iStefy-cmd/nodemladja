@@ -13,6 +13,11 @@ router.get(
   },
   userController.getUserInfo
 );
+router.post(
+  "/user/post-add-transaction",
+  isAuth,
+  userController.postAddTransaction
+);
 //post requests
 // router.post("/post-add-transaction", isAuth, userController.postAddTransaction);
 // router.delete("/delete", isAuth, userController.postDeleteRequest);

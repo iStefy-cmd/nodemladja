@@ -12,6 +12,7 @@
       .transaction-form {
         margin-bottom: 50px;
         display: grid;
+        margin-top: 50px;
         border-radius: 20px;
         border: 2px solid black;
         grid-template-columns: 25%25%25%25%;
@@ -61,8 +62,8 @@
       }
       .logout-form {
         position: absolute;
-        top: 80px;
-        right: 72px;
+        top: 7px;
+        left: 10px;
       }
       .logout-form button {
         cursor: pointer;
@@ -80,6 +81,85 @@
   </head>
   <body>
     <header>
+      <button
+        id="notificationButton"
+        style="
+          padding: 4px 20px;
+          position: absolute;
+          top: 7px;
+          right: 10px;
+          background-color: white;
+          color: black;
+          border: 4px solid grey;
+          border-radius: 4px;
+          font-size: 17px;
+          cursor: pointer;
+        "
+      >
+        Prikazi zahteve
+      </button>
+      <div
+        id="notificationContainer"
+        style="
+          position: absolute;
+          top: 37px;
+          right: 40px;
+          background-color: white;
+          display: none;
+          border: 1px solid #ccc;
+          padding: 10px;
+          max-width: 500px;
+          margin-top: 10px;
+        "
+      >
+        <h2>Notifications</h2>
+        <ul
+          id="notificationList"
+          style="list-style-type: none; padding: 0"
+        ></ul>
+      </div>
+
+      <script>
+        // Sample notification data
+        const notifications = [
+          "Notification 1",
+          "Notification 2",
+          "Notification 3",
+        ];
+
+        let isShowingNotifications = false;
+
+        // Function to display or hide notifications
+        function toggleNotifications() {
+          const container = document.getElementById("notificationContainer");
+          const list = document.getElementById("notificationList");
+
+          // Clear previous notifications
+          list.innerHTML = "";
+
+          if (isShowingNotifications) {
+            // Hide the notification container
+            container.style.display = "none";
+            isShowingNotifications = false;
+          } else {
+            // Add new notifications
+            notifications.forEach((notification) => {
+              const li = document.createElement("li");
+              li.innerText = notification;
+              list.appendChild(li);
+            });
+
+            // Show the notification container
+            container.style.display = "block";
+            isShowingNotifications = true;
+          }
+        }
+
+        // Add event listener to the button
+        const button = document.getElementById("notificationButton");
+        button.addEventListener("click", toggleNotifications);
+      </script>
+
       <div class="form">
         <form
           class="transaction-form"
