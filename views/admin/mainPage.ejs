@@ -48,22 +48,18 @@
         position: absolute;
         top: 7px;
         right: 10px;
-        background-color: white;
-        color: black;
-        border: 4px solid grey;
+        background-color: #00c853;
+        
+        color: rgb(0, 0, 0);
+        border: 1px solid #000000;
         border-radius: 4px;
-        font-size: 17px;
+        font-size: 18px;
         cursor: pointer;
       }
       
       .move {
         color: white;
-        font-weight: bold;
-        top: 2px;
-        right: 5px;
-        margin-top: 2px;
-        border: 4px solid rgb(255, 0, 0);
-        padding: 7px 26px;
+        padding-block: 9px;
         background-color: red;
         transition: 0.6s ease;
       }
@@ -93,7 +89,8 @@
         position: absolute;
         top: 22px;
         left: 50px;
-  width: 1800px;z-index: 1;
+        right: 25px;
+ z-index: 1;
   height: 4px;border: 1px solid rgba(0, 0, 0, 0.113);
   background-color: #ffffff58;
   overflow: hidden;
@@ -106,6 +103,10 @@
   background-color: #ff0000;
   width: 0;
   transition: width 0.6s ease-in-out;
+}
+.charging-bar-green{
+  background-color: #00c853;height: 4px;
+  width: 100%;
 }
 
       .logout-form button {
@@ -121,6 +122,54 @@
         font-size: 18px;
         border: 2px solid black;
       }
+      .notificationContainer{
+        position: absolute;
+          top: 45px;
+          right: 40px;
+          background-color: rgb(144 238 144);
+          border-radius: 20px;
+          width: 1000px;
+          border: 4px solid #000000;
+          z-index: 66;
+          padding-inline: 10px;
+          
+
+      }
+      .request button {
+        height: 30px;
+        width: 100px;
+        border-radius: 5px;
+        margin:auto
+      }
+      .notificationContainer p {
+       margin:auto;
+     
+      }
+     .request{
+      padding-block: 12px;
+      text-align: center;font-size: 19px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+      display: grid;
+      grid-template-columns: 16%18%16%16%15%2%15%;
+      background-color: rgb(0 200 83);
+      margin-block: 10px;border: 2px solid black;
+      border-radius: 10px;
+     }  .requestDeposit button {
+        height: 30px;
+        width: 100px;
+        border-radius: 5px;
+        margin:auto
+      }
+     .requestDeposit{text-align: center;font-size: 19px;padding-block: 12px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+      display: grid;
+      grid-template-columns: 16%18%16%16%15%2%15%;
+      background-color: rgb(211, 94, 61);
+      margin-block: 10px;border: 2px solid black;
+      border-radius: 10px;
+     }
     </style>
   </head>
   <body>
@@ -140,63 +189,54 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
           </form></div>
           <div class="charging-container">
-            <div id="charging-bar" class="charging-bar"></div>
+            <div id="charging-bar" class=" <%=requests[0]?'charging-bar':'charging-bar-green';%>"></div>
           </div>
           <button class="notificationButton">Prikazi zahteve</button></div>
       
       <div
-        id="notificationContainer"
-        class="none"
-        style="
-          position: absolute;
-          top: 37px;
-          right: 40px;
-          background-color: white;
-          
-          border: 1px solid #ccc;
-          padding: 10px;
-          max-width: 500px;
-          margin-top: 10px;
-        "
+       class="notificationContainer none"
+       
       >
-        <h2>Notifications</h2>
+        <h1 id="requestTitle" style="text-align: center;"><%=requests[0]?'Zahtevi:':'Nema zahteva'%></h2>
         <ul
           id="notificationList"
-          style="list-style-type: none; padding: 0"
+          style="list-style-type: none; padding: 0;"
         >
       <%if(requests && requests[0]){%>
         <%requests.forEach(req=>{%>
-          <div class="request">
+          <div class="<%= req.description!=='notdeposit'?'requestDeposit':'request'%>">
             <p class="name"><%=req.name%></p>
-           <p class="type"> <%=req.type%></p>
-            <p class="description"><%=req.description%></p>
-            <p class="quantity"><%= req.quantity%></p>
-            <p class="price"><%= req.price%></p>
-            <p class="deposit"><%= req.deposit%></p>
+          <p class="type"><%= req.type%></p>
+            <%if(req.description !== "notdeposit"){%><p class="description"><%=req.description%></p><%}%>
+            <%if(req.description == "notdeposit"){%> <p class="quantity"><%= req.quantity%></p><%}%>
+             <%if(req.description == "notdeposit"){%> <p class="price"><%= req.price%></p><%}%>
+            <%if(req.description !== "notdeposit"){%><p class="deposit"><%=req.deposit%></p><%}%>
             
             <input type="hidden" class="_csrf" name="_csrf" value="<%= csrfToken%>">
             <input type="hidden" class="transactionID" name="transactionID" value="<%=req._id%>">
             <input type="hidden" class="userID" name="userID" value="<%= req.userID%>">
             <button onclick="approveTransaction(this)">✔️</button>
+            <div></div>
             <button onclick="rejectTransaction(this)">❌</button>
           </div>
           
           <%})%>
         
+        </ul>
         
-        
-        <%}else{%>
-        <h2>No requests :D</h2>
         <%}%>
       
       </ul>
       </div>
+     <%if(requests && requests[0]){%>
       <script>
         const chargingBar = document.getElementById('charging-bar');
 
+       console.log(chargingBar);
+       
 
-
-        setInterval(() => {
+       const interval =  setInterval(() => {
+        if(chargingBar.classList == ' charging-bar'){
           chargingBar.style.width = '100%';
          setTimeout(() => {
           document
@@ -213,19 +253,24 @@
             document
               .querySelector(".notificationButton")
               .classList.toggle("move");
-          }, 1250);
-        }, 20000);
-      </script>
+          }, 1250);}else{
+            clearInterval(interval)
+          }
+        }, 5000);
+        
+      </script><%} %>
       <script>
 
         let isShowingNotifications = false;
 
         // Function to display or hide notifications
         function toggleNotifications() {
-          const container = document.getElementById("notificationContainer");
+          const container = document.querySelector(".notificationContainer");
           const list = document.getElementById("notificationList");
          container.classList.toggle("none");
-
+         document.getElementById("charging-bar").classList = "charging-bar-green";document.getElementById("charging-bar").style.width = '100%';
+    document.getElementById("notificationList").innerHTML.trim()?"":document.getElementById("requestTitle").innerText = "Nema zahteva";
+    
         }
 
         // Add event listener to the button

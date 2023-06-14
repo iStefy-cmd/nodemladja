@@ -385,7 +385,6 @@ exports.postApproveTransaction = async (req, res, next) => {
         description: description,
         deposit: deposit,
       });
-      console.log(transaction);
 
       user.transactions.push({
         type: type,
@@ -411,7 +410,6 @@ exports.postApproveTransaction = async (req, res, next) => {
         userID: userID,
       });
 
-      console.log(transaction + "else");
       user.transactions.push({
         type: type,
         quantity: quantity,
@@ -442,7 +440,7 @@ exports.postRejectTransaction = async (req, res, next) => {
     );
     //////////////////
     await admin.save();
-    res.status(200).json({ message: "radi", rejected: true });
+    res.status(200).json({ message: "rejected" });
   } catch (error) {
     console.log(error);
   }

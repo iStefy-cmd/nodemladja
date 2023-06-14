@@ -30,4 +30,10 @@ router.post(
   isAdmin,
   adminController.postApproveTransaction
 );
+router.post(
+  "/rejectTransaction",
+
+  isAdmin,
+  adminController.postRejectTransaction
+);
 module.exports = router;
