@@ -5,18 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/transaction-for-user.css" />
-    <style>
+    <style>input {
+      margin-left: 8px;
+    }h3 {
+      font-weight: 1;
+    color: #fff;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background-color: #757575;
+    padding: 10px;
+    margin-top: 0; font-size: 25px;
+    text-align: center;
+}
+    .transaction{margin: 2px;
+      font-weight: bold;
+  font-size: 23px;
+    }
       .transaction-form {
-        margin-bottom: 50px;
+        margin-bottom: 22px;
         display: grid;
         margin-top: 50px;
         border-radius: 20px;
         border: 2px solid black;
         grid-template-columns: 25%25%25%25%;
         padding-block: 20px;
-        row-gap: 20px;
+  font-weight: bold;
         text-align: center;
-        font-size: 18px;
+  font-size: 21px;
         background-color: #00c853;
       }
       .transaction-form input {
@@ -24,6 +39,33 @@
         height: 30px;
         border: none;
       }
+      .descripted-deposit-transaction p {
+ 
+ font-weight: bold;
+ font-size: 23px;
+}.descripted-deposit-transaction {
+  background-color: rgb(199, 99, 85);
+  padding: 5px;margin: 2px;
+  border: 2px solid rgb(233, 5, 5);
+  text-align: center;
+  display: grid;
+  grid-template-columns: 45%10%45%;
+}
+.deposit-transaction {
+  background-color: rgb(199, 99, 85);
+  padding: 5px;
+  margin: 2px;
+  border: 2px solid rgb(233, 5, 5);
+  text-align: center;
+  display: grid;
+  grid-template-columns: 45%10%45%;
+}
+.deposit-transaction p {
+  font-weight: bold;
+  font-size: 23px;
+}#p {
+  font-size: 25px;
+}
 
       .transaction-form button,
       .transaction-form a {
@@ -42,12 +84,52 @@
       .transaction-form a {
         font-size: 20px;
       }
+.deposit-transaction-form{
+  margin-block: 17px; 
+  display: grid;
+  border-radius: 20px;
+  border: 2px solid black;grid-template-columns: 24%52%23%;
+  padding-block: 20px;
+  row-gap: 20px;
+  font-weight: bold;
+  font-size: 21px;
+  background-color: rgb(199, 99, 85);
+}
+.deposit-transaction-form div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deposit-transaction-form input{
+  border-radius: 5px;
+  height: 30px;
+  border:none;
+}
+
+.deposit-transaction-form button{
+  width: 220px;
+  padding-block: 4px;height: 35px;
+  border-radius: 12px;
+  margin: auto;cursor: pointer;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  border: 2px solid rgb(0, 0, 0);
+  
+}
     </style>
   </head>
   <body>
     <h1><%= user.name%></h1>
+    <div> 
+      <form action="/logout" method="POST">
+      
     <h1><%= user.debt%> din</h1>
-   
+      <button type="submit" style=" 
+      background-color: rgb(240, 34, 34); height: 35px;">Logout</button>
+      <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+    </form></div>
 
     <div class="form">
       <form
@@ -69,38 +151,80 @@
 
         <button type="submit" style="height: 35px;">Posalji zahtev</button>
         <div></div>
-        <a href="/admin/transactions">Transakcije</a>
-<div> <form action="/logout" method="POST">
-  <button type="submit" style=" 
-  background-color: rgb(240, 34, 34); height: 35px;">Logout</button>
-  <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-</form></div>
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+        
+      
       </form>
+     
+      </div>
+    </div>
+    <div><form class="deposit-transaction-form" action="/user/post-add-transaction" method="POST">
+      <input type="hidden" name="name" value="<%= user.name%>">
+      <input type="hidden" name="isLocal" value="true">
+      <div> <label for="deposit">Uplata</label>
+        <input type="text" name="deposit" /></div>
+      <div> <label for="description">Dodatne informacije</label>
+          <input type="text" name="description" /></div> 
+        
+
+        <button type="submit">Posalji zahtev</button>
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
+      </form></div>
+   
+
+
     
+    <div class="user-transactions">
+      <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
+      { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
+      <div class="date-container">
+        <h3><%= date %></h3>
+        <% const transactions = transactionsGrouped[date].transactions; %> <%
+        const totalDebt = transactionsGrouped[date].totalDebt; %> <%
+        transactions.forEach(transaction => { %>
+        <% if(transaction.type === "uplata") {%>
+         
+          <%if(transaction.description.length>2){%>
+            <div style="margin-block: 3px;" class="descripted-deposit-transaction">
+              
+             
+    
+              <p id="p1">Opis: <%=transaction.description%></p>
+              <p></p>
+              <p style="padding-left: 10px;"><%= transaction.deposit %> din</p>
+              
+              </div>
+            
+            
+            
+            <%}else{%>
+            <div style="margin-block: 3px;" class="deposit-transaction">
+              <p>Uplata</p>
+              <p></p>
+    
+              <p style="padding-left: 10px;"> <%= transaction.deposit %> din</p>
+              </div><%}%>
+         
+          
+          <%} else {%>
+          <div style="margin-block: 3px;" class="transaction">
+            <p>Type: <%= transaction.type %></p>
+            <p>Price: <%= transaction.price %> din</p>
+            <p>Kolicina: <%= transaction.quantity %> unit</p>
+  
+            <p>Dug: <%= transaction.debt %> din</p>
+           
+           
+          </div>
+          
+          <%}%>
+        <% }) %>
+
+        <p id="p">Dug za ovaj Dan: <%= totalDebt %> din</p>
       </div>
+      <% } %> <% } %> <%}else{%>
+      <h1>nemate nijednu transakciju :/</h1>
+      <%}%>
     </div>
-
-    <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped) {
-    %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
-    <div class="date-container">
-      <h3><%= date %></h3>
-      <% const transactions = transactionsGrouped[date].transactions; %> <%
-      const totalDebt = transactionsGrouped[date].totalDebt; %> <%
-      transactions.forEach(transaction => { %>
-      <div class="transaction">
-        <p>Type: <%= transaction.type %></p>
-        <p>Price: <%= transaction.price %> din</p>
-        <p>Kolicina: <%= transaction.quantity %> unit</p>
-
-        <p>Dug: <%= transaction.debt %> din</p>
-      </div>
-      <% }) %>
-
-      <p id="p">Dug za ovaj Dan: <%= totalDebt %> din</p>
-    </div>
-    <% } %> <% } %> <%}else{%>
-    <h1>nemate nijednu transakciju :/</h1>
-    <%}%>
   </body>
 </html>

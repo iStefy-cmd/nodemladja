@@ -2,25 +2,18 @@ const User = require("../models/user");
 
 const Transaction = require("../models/transaction");
 const bcrypt = require("bcryptjs");
-const io = require("socket.io-client");
-const socketClient = io("http://localhost:3000");
-exports.getMainPage = (req, res, next) => {
-  socketClient.on("req", (reqe) => {
-    console.log(reqe);
+const Admin = require("../models/admin");
 
-    console.log("Connected to server");
-  });
-
-  socketClient.on("disconnect", () => {
-    console.log("Disconnected from server");
-  });
-
-  User.find().then((users) => {
-    res.render("../views/admin/mainPage", {
-      names: users.map((u) => u.name),
-    });
+exports.getMainPage = async (req, res, next) => {
+  const users = await User.find();
+  const currentAdmin = await Admin.findOne({ _id: req.session.user._id });
+  const requests = currentAdmin.requests;
+  res.render("../views/admin/mainPage", {
+    names: users.map((u) => u.name),
+    requests,
   });
 };
+
 exports.getUserInfo = async (req, res, next) => {
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   const name = req.params.userName;
@@ -194,6 +187,8 @@ exports.postDeleteRequest = (req, res, next) => {
 };
 exports.postAddTransaction = (req, res, next) => {
   if (req.body.deposit) {
+    console.log(req.body);
+
     const name = req.body.name;
     const type = "uplata";
     const quantity = -req.body.deposit;
@@ -358,4 +353,97 @@ exports.postDeleteProfile = (req, res, next) => {
     .catch((er) => {
       console.log(er);
     });
+};
+exports.postApproveTransaction = async (req, res, next) => {
+  try {
+    let name = req.query.name;
+    let deposit = req.query.deposit;
+    let description = req.query.description;
+    let price = req.query.price;
+    let quantity = req.query.quantity;
+    let type = req.query.type;
+    let userID = req.query.userID;
+    let transactionID = req.query.transactionID;
+
+    const admin = await Admin.findOne({ _id: req.session.user._id });
+    const user = await User.findOne({ _id: userID });
+    admin.requests = admin.requests.filter(
+      (t) => t._id.toString() !== transactionID
+    );
+    //////////////////
+    await admin.save();
+    if (deposit === "uplata") {
+      type = "uplata";
+      quantity = deposit;
+      price = 1;
+      const transaction = new Transaction({
+        name: name,
+        type: type,
+        quantity: quantity,
+        price: price,
+        userID: userID,
+        description: description,
+        deposit: deposit,
+      });
+      console.log(transaction);
+
+      user.transactions.push({
+        type: type,
+        quantity: quantity,
+        price: price,
+        description: description,
+        deposit: deposit,
+        transactionID: transaction._id,
+      });
+      user.debt += deposit;
+
+      await user.save();
+      await transaction.save();
+      console.log("Created Product");
+    } else {
+      const transaction = new Transaction({
+        name: name,
+        type: type,
+        quantity: quantity,
+        price: price,
+        deposit: deposit,
+        description: description,
+        userID: userID,
+      });
+
+      console.log(transaction + "else");
+      user.transactions.push({
+        type: type,
+        quantity: quantity,
+        price: price,
+        transactionID: transaction._id,
+      });
+      user.debt += price * quantity;
+
+      await user.save();
+      await transaction.save();
+      console.log("Created Product");
+    }
+
+    //////////////////
+
+    return res.status(200).json({ message: "radi" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.postRejectTransaction = async (req, res, next) => {
+  try {
+    const transactionID = req.query.transactionID;
+    const admin = await Admin.findOne({ _id: req.session.user._id });
+
+    admin.requests = admin.requests.filter(
+      (t) => t._id.toString() !== transactionID
+    );
+    //////////////////
+    await admin.save();
+    res.status(200).json({ message: "radi", rejected: true });
+  } catch (error) {
+    console.log(error);
+  }
 };

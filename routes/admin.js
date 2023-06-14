@@ -24,4 +24,10 @@ router.post(
 
   adminController.postDeleteProfile
 );
+router.post(
+  "/approveTransaction",
+
+  isAdmin,
+  adminController.postApproveTransaction
+);
 module.exports = router;

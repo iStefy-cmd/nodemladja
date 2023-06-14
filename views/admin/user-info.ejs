@@ -160,6 +160,7 @@ h3 {
   display: grid;
   grid-template-columns: 33%33%33%;
   text-align: center;
+margin-bottom: 14px;
 }
 .hrefs a {
   padding-block: 12px;
@@ -227,8 +228,7 @@ input {
   margin-block: 17px; 
   display: grid;
   border-radius: 20px;
-  border: 2px solid black;
-  grid-template-columns: 33%33%33%;
+  border: 2px solid black;grid-template-columns: 24%52%23%;
   padding-block: 20px;
   row-gap: 20px;
   font-weight: bold;
@@ -264,7 +264,7 @@ input {
   font-size: 23px;
 }
 .descripted-deposit-transaction #p1 {
-  margin-left: 45px;
+  margin-left: 65px;
   text-align: left;
 }
 
@@ -321,16 +321,6 @@ input {
        
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
       </form>
-      <div class="hrefs">
-        <a id="main-page" href="/admin/main">MAIN PAGE</a
-        >
-        <div><button class="confirm" id="d" onclick="Action(event)">
-          Obrisi Profil
-        </button></div>
-        <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
-      </div>
-      
-      <!-- paying form -->
       <div><form class="deposit-transaction-form" action="/admin/post-add-transaction" method="POST">
         <input type="hidden" name="name" value="<%= user.name%>">
         <input type="hidden" name="isLocal" value="true">
@@ -343,6 +333,17 @@ input {
           <button type="submit">Potvrdi</button>
           <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         </form></div>
+
+      <div class="hrefs">
+        <a id="main-page" href="/admin/main">MAIN PAGE</a
+        >
+        <div><button class="confirm" id="d" onclick="Action(event)">
+          Obrisi Profil
+        </button></div>
+        <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
+      </div>
+      
+ 
     <div class="user-transactions">
       <% if(transactionsGrouped) { %><% for (const date in transactionsGrouped)
       { %> <% if (transactionsGrouped.hasOwnProperty(date)) { %>
