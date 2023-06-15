@@ -9,7 +9,7 @@ const postDeleteTransaction = (btn) => {
   const csrf = btn.parentNode.querySelector('[name="_csrf"]').value;
 
   fetch(
-    `http://localhost:3000/admin/delete?transactionID=${transactionID}&userID=${userID}`,
+    `https://outrageous-hen-suit.cyclic.app/admin/delete?transactionID=${transactionID}&userID=${userID}`,
     {
       method: "DELETE",
       headers: {
@@ -60,7 +60,7 @@ const approveTransaction = (btn) => {
   const transactionID = parentDiv.querySelector(".transactionID").value;
 
   fetch(
-    `http://localhost:3000/admin/approveTransaction?name=${name}&deposit=${deposit}&description=${description}&price=${price}&quantity=${quantity}&type=${type}&userID=${userID}&transactionID=${transactionID}`,
+    `https://outrageous-hen-suit.cyclic.app/admin/approveTransaction?name=${name}&deposit=${deposit}&description=${description}&price=${price}&quantity=${quantity}&type=${type}&userID=${userID}&transactionID=${transactionID}`,
     {
       method: "POST",
 
@@ -95,7 +95,7 @@ const rejectTransaction = (btn) => {
   const transactionID = parentDiv.querySelector(".transactionID").value;
 
   fetch(
-    `http://localhost:3000/admin/rejectTransaction?transactionID=${transactionID}`,
+    `https://outrageous-hen-suit.cyclic.app/admin/rejectTransaction?transactionID=${transactionID}`,
     {
       method: "POST",
 
