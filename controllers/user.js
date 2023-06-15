@@ -69,7 +69,7 @@ exports.postAddTransaction = async (req, res, next) => {
   let type = req.body.type;
   let quantity = req.body.quantity;
   let price = req.body.price;
-  let description = req.body.description;
+  let description = req.body.description || "uplata";
   let deposit = -req.body.deposit;
   const userID = req.session.user._id;
 
