@@ -184,15 +184,15 @@
               "
               type="submit"
             >
-              Logout
+              Odjavi se 
             </button>
             <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
           </form></div>
           <div class="charging-container">
             <div id="charging-bar" class=" <%=requests[0]?'charging-bar':'charging-bar-green';%>"></div>
           </div>
-          <button class="notificationButton">Prikazi zahteve</button></div>
-      
+          <button class="notificationButton">Prikaži zahteve</button></div>
+          
       <div
        class="notificationContainer none"
        
@@ -208,9 +208,9 @@
             <p class="name"><%=req.name%></p>
           <p class="type"><%= req.type%></p>
             <%if(req.description !== "notdeposit"){%><p class="description"><%=req.description%></p><%}%>
-            <%if(req.description == "notdeposit"){%> <p class="quantity"><%= req.quantity%></p><%}%>
-             <%if(req.description == "notdeposit"){%> <p class="price"><%= req.price%></p><%}%>
-            <%if(req.description !== "notdeposit"){%><p class="deposit"><%=req.deposit%></p><%}%>
+            <%if(req.description == "notdeposit"){%> <p class="quantity"><%= req.quantity%> x</p><%}%>
+             <%if(req.description == "notdeposit"){%> <p class="price"><%= req.price%> din</p><%}%>
+            <%if(req.description !== "notdeposit"){%><p class="deposit"><%=req.deposit%> din</p><%}%>
             
             <input type="hidden" class="_csrf" name="_csrf" value="<%= csrfToken%>">
             <input type="hidden" class="transactionID" name="transactionID" value="<%=req._id%>">
@@ -290,11 +290,11 @@
             <label for="type">Roba</label> <input type="text" name="type" />
           </div>
           <div>
-            <label for="quantity">Kolicina</label>
-            <input type="text" name="quantity" />
+            <label for="quantity">Količina</label>
+            <input type="number" name="quantity" />
           </div>
           <div>
-            <label for="price">Cena</label> <input type="text" name="price" />
+            <label for="price">Cena</label> <input type="number" name="price" />
           </div>
 
           <div></div>

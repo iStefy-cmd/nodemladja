@@ -9,15 +9,19 @@ const mailgun = require("mailgun-js")({
   apiKey: "eb534d910a3482771e385880fdefc5f2-6d1c649a-09df90ea",
   domain: url,
 });
+const { validationResult } = require("express-validator");
 
 exports.getLogin = (req, res, next) => {
-  res.render("auth/login", {});
+  res.render("auth/login", { errors: null });
 };
 exports.postLogin = (req, res, next) => {
   req.session.cookie.expires = new Date(Date.now() + 1 * 60 * 60 * 1000);
   const email = req.body.email;
   const password = req.body.password;
-
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", { errors: errors.array() });
+  }
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
@@ -44,13 +48,17 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.getAuthInfoChange = (req, res, next) => {
-  res.render("auth/auth-info-change", {});
+  res.render("auth/auth-info-change", { errors: null });
 };
 exports.postAuthInfoChange = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const newPassword = req.body.newpassword;
   const newPasswordConfirmation = req.body.newpasswordconfirmation;
+  const errors = validationResult(req);
+
+  if (req.body.newemail && !errors.isEmpty())
+    return res.render("auth/auth-info-change", { errors: errors.array() });
 
   if (newPassword === newPasswordConfirmation) {
     User.findOne({ email: email }).then((user) => {
@@ -124,14 +132,18 @@ exports.postLogout = (req, res, next) => {
   });
 };
 exports.getAdminLogin = (req, res, next) => {
-  res.render("admin/login");
+  res.render("admin/login", {
+    errors: null,
+  });
 };
 
 exports.postAdminLogin = (req, res, next) => {
   req.session.cookie.expires = new Date(Date.now() + 1 * 60 * 60 * 1000);
   const email = req.body.email;
   const password = req.body.password;
-
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.render("admin/login", { errors: errors.array() });
   Admin.findOne({ email: email })
     .then((user) => {
       if (!user) {
@@ -158,105 +170,105 @@ exports.postAdminLogin = (req, res, next) => {
       console.log(er);
     });
 };
-exports.getResetPassword = (req, res, next) => {
-  res.render("auth/reset");
-};
-exports.postResetPassword = (req, res, next) => {
-  crypto.randomBytes(32, (err, buffer) => {
-    if (err) {
-      console.log(err);
+// exports.getResetPassword = (req, res, next) => {
+// res.render("auth/reset");
+// };
+// exports.postResetPassword = (req, res, next) => {
+//   crypto.randomBytes(32, (err, buffer) => {
+//     if (err) {
+//       console.log(err);
 
-      return res.redirect("/reset");
-    }
-    const token = buffer.toString("hex");
-    User.findOne({ email: req.body.email })
-      .then((user) => {
-        if (!user) {
-          console.log("no user with this email");
-          return res.redirect("/reset");
-        }
-        user.resetToken = token;
-        user.resetTokenExpiration = Date.now() + 1000 * 60 * 60;
-        return user.save();
-      })
-      .then((result) => {
-        res.redirect("/");
-        console.log(`Reset link http://localhost:3000/reset/${token}`);
+//       return res.redirect("/reset");
+//     }
+//     const token = buffer.toString("hex");
+//     User.findOne({ email: req.body.email })
+//       .then((user) => {
+//         if (!user) {
+//           console.log("no user with this email");
+//           return res.redirect("/reset");
+//         }
+//         user.resetToken = token;
+//         user.resetTokenExpiration = Date.now() + 1000 * 60 * 60;
+//         return user.save();
+//       })
+//       .then((result) => {
+//         res.redirect("/");
+//         console.log(`Reset link http://localhost:3000/reset/${token}`);
 
-        // const emailData = {
-        //   from: "Agriculture Management <agriculture@support.com>",
-        //   to: req.body.email,
-        //   subject: "Password Reset Request",
-        //   html: `<p>Click on this link to reset password <a href="http://localhost:3000/reset/${token}">Reset</a></p>`,
-        // };
-        // mailgun.messages().send(emailData, (error, body) => {
-        //   if (error) {
-        //     console.error("Error sending email:", error);
-        //   } else {
-        //     console.log("Email sent successfully!");
-        //   }
-        // });
-      })
-      .catch((er) => {
-        console.log(er);
-      });
-  });
-};
-exports.getNewPassword = (req, res, next) => {
-  const token = req.params.token;
-  User.findOne({
-    resetToken: token,
-    resetTokenExpiration: { $gt: Date.now() },
-  })
-    .then((user) => {
-      if (!user) return res.redirect("/reset");
+//         // const emailData = {
+//         //   from: "Agriculture Management <agriculture@agriculture.me>",
+//         //   to: req.body.email,
+//         //   subject: "Password Reset Request",
+//         //   html: `<p>Click on this link to reset password <a href="http://localhost:3000/reset/${token}">Reset</a></p>`,
+//         // };
+//         // mailgun.messages().send(emailData, (error, body) => {
+//         //   if (error) {
+//         //     console.error("Error sending email:", error);
+//         //   } else {
+//         //     console.log("Email sent successfully!");
+//         //   }
+//         // });
+//       })
+//       .catch((er) => {
+//         console.log(er);
+//       });
+//   });
+// };
+// exports.getNewPassword = (req, res, next) => {
+//   const token = req.params.token;
+//   User.findOne({
+//     resetToken: token,
+//     resetTokenExpiration: { $gt: Date.now() },
+//   })
+//     .then((user) => {
+//       if (!user) return res.redirect("/reset");
 
-      res.render("auth/new-password", {
-        userID: user._id.toString(),
-        passwordToken: token,
-      });
-    })
-    .catch((er) => {
-      console.log(er);
-    });
-};
+//       res.render("auth/new-password", {
+//         userID: user._id.toString(),
+//         passwordToken: token,
+//       });
+//     })
+//     .catch((er) => {
+//       console.log(er);
+//     });
+// };
 
-exports.postNewPassword = (req, res, next) => {
-  const newPassword = req.body.password;
-  const newPasswordConfirmed = req.body.passwordConfirmed;
-  const userID = req.body.userID;
-  const passwordToken = req.body.passwordToken;
-  let userVar;
-  if (newPassword === newPasswordConfirmed) {
-    User.findOne({
-      resetToken: passwordToken,
-      resetTokenExpiration: { $gt: Date.now() },
-      _id: userID,
-    })
-      .then((user) => {
-        if (!user) {
-          console.log("Nema usera, doslo je do greske ili je istekao token");
-          return res.redirect("/reset");
-        }
-        userVar = user;
-        return bcrypt.hash(newPassword, 12);
-      })
-      .then((hashedPw) => {
-        userVar.password = hashedPw;
-        userVar.resetToken = undefined;
-        userVar.resetTokenExpiration = undefined;
-        return userVar.save();
-      })
-      .then((result) => {
-        console.log("uspesno promenjena sifra");
+// exports.postNewPassword = (req, res, next) => {
+//   const newPassword = req.body.password;
+//   const newPasswordConfirmed = req.body.passwordConfirmed;
+//   const userID = req.body.userID;
+//   const passwordToken = req.body.passwordToken;
+//   let userVar;
+//   if (newPassword === newPasswordConfirmed) {
+//     User.findOne({
+//       resetToken: passwordToken,
+//       resetTokenExpiration: { $gt: Date.now() },
+//       _id: userID,
+//     })
+//       .then((user) => {
+//         if (!user) {
+//           console.log("Nema usera, doslo je do greske ili je istekao token");
+//           return res.redirect("/reset");
+//         }
+//         userVar = user;
+//         return bcrypt.hash(newPassword, 12);
+//       })
+//       .then((hashedPw) => {
+//         userVar.password = hashedPw;
+//         userVar.resetToken = undefined;
+//         userVar.resetTokenExpiration = undefined;
+//         return userVar.save();
+//       })
+//       .then((result) => {
+//         console.log("uspesno promenjena sifra");
 
-        return res.redirect("/login");
-      })
-      .catch((er) => {
-        console.log(er);
-      });
-  } else {
-    console.log("sifre moraju biti iste");
-    res.redirect("/reset");
-  }
-};
+//         return res.redirect("/login");
+//       })
+//       .catch((er) => {
+//         console.log(er);
+//       });
+//   } else {
+//     console.log("sifre moraju biti iste");
+//     res.redirect("/reset");
+//   }
+// };

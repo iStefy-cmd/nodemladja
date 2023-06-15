@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/login.css" />
+    <style>
+      body {
+        font-size: 19px;
+      }
+      .emailred {
+        color: red;
+        font-weight: bold;
+      }
+      .emailred input{
+        border-color: red;
+      }
+    </style>
   </head>
 
   <body>
@@ -13,22 +25,22 @@
       <% if(!isAuthenticated) {%>
       <h1>Prijavite se</h1>
       <form action="/login" method="POST">
-        <div class="email">
+        <div class="<%=errors?'email emailred': 'email' %>"">
           <label for="email">Email</label> <input name="email" type="email" />
         </div>
         <div class="password">
           <label for="password">Password</label>
           <input name="password" type="password" />
         </div>
-        <button type="submit">Prijavi se</button>
+        <button style="font-size: 18px;" type="submit">Prijavi se</button>
 
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         <div class="register">
-          Ne znate podatke? <a href="/auth-info-change">Promena podataka</a>
+          <a href="/auth-info-change">Promena podataka</a>
         </div>
-        <div >
+        <!-- <div >
           Zaboravili ste lozinku?<a href="/reset"> Reset lozinke</a>
-        </div>
+        </div> -->
       </form>
       <%} else {%>
       <form action="/logout" method="POST">

@@ -5,23 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/login.css" />
+    <style>
+      body {
+        font-size: 19px;
+      }
+      .emailred {
+        color: red;
+        font-weight: bold;
+      }
+      .emailred input {
+        border-color: red;
+      }
+    </style>
   </head>
   <body>
     <div class="wrapper">
       <% if(!isAuthenticated) {%>
       <h1>Admin Prijava</h1>
       <form action="/admin-login" method="POST">
-        <div class="email">
+        <div class="<%=errors?'email emailred': 'email' %>">
           <label for="email">Email</label> <input name="email" type="email" />
         </div>
         <div class="password">
           <label for="password">Password</label>
           <input name="password" type="password" />
-          <button type="submit" style="margin-top: 30px">Prijavi se</button>
+          <button type="submit" style="margin-top: 30px; font-size: 18px">
+            Prijavi se
+          </button>
         </div>
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         <div class="register" style="padding-top: 25px">
-          Niste admin? <a href="login">User Login</a>
+          Niste admin? <a href="login">Prijava za korisnike</a>
         </div>
       </form>
       <%} %>

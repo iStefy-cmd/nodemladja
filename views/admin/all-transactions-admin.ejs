@@ -52,7 +52,7 @@
         border: 2px solid rgb(233, 5, 5);
         text-align: center;
         display: grid;
-        grid-template-columns: 20%40%13%34%;
+        grid-template-columns: 20%30%30%20%;
       }
       .deposit-transaction {
         background-color: rgb(199, 99, 85);
@@ -61,7 +61,7 @@
         border: 2px solid rgb(233, 5, 5);
         text-align: center;
         display: grid;
-        grid-template-columns: 20%20%33%34%;
+        grid-template-columns: 20%30%30%20%;
       }
       .deposit-transaction p {
         font-weight: bold;
@@ -90,42 +90,26 @@
         font-weight: bold;
         font-size: 23px;
       }
-      .descripted-deposit-transaction #p1 {
-        margin-left: 45px;
-        text-align: left;
-      }
+      
     </style>
   </head>
   <body>
     <h1>SVE TRANSAKCIJE</h1>
-    <div class="mainpagehref"><a href="/admin/main">MAIN PAGE</a></div>
+    <div class="mainpagehref"><a href="/admin/main" style="padding-block: 5px;">POČETNA STRANA</a></div>
     <% if (alltransactions.length > 0) { %> <% for (const date of dates) { %>
 
     <div class="date-container">
       <div class="date-header">
         <h3><%= date %></h3>
       </div>
-      <div class="transactions-container">
+      <div class="transactions-container" style="margin-bottom: 18px">
         <% const transactions = data[date]; %> <%
-        transactions.forEach(transaction => { %>
-
-        <!-- <div class="cart__item">
-            
-            <h2 id="name"><%= transaction.name %></h1>
-              <h2 id="type">Roba: <%= transaction.type %></h2>
-              <h2 id="quantity">Kolicina: <%= transaction.quantity %></h2>
-              <h2 id="price">Cena: <%= transaction.price %></h2>
-              <h2 id="date">Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new Date(transaction.unConvertedDate).getYear()%></h2>
-          </div> -->
-
-        <% if(transaction.type === "uplata") {%>
-        <%if(transaction.description.length>2){%>
+        transactions.forEach(transaction => { %> <% if(transaction.type ===
+        "uplata") {%> <%if(transaction.description.length>2){%>
         <div class="descripted-deposit-transaction">
-          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <h2 class="name"><%= transaction.name%></h2>
           <p id="p1">Opis: <%=transaction.description%></p>
-          <p style="text-align: right; padding-right: 5px">
-            <%= transaction.deposit %> din
-          </p>
+          <p style="padding-right: 5px"><%= transaction.deposit %> din</p>
           <h2 id="date">
             Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new
             Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new
@@ -135,12 +119,10 @@
 
         <%}else{%>
         <div class="deposit-transaction">
-          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <h2 class="name"><%= transaction.name%></h2>
           <p>Uplata</p>
 
-          <p style="text-align: right; padding-right: 5px">
-            <%= transaction.deposit %> din
-          </p>
+          <p style="padding-right: 5px"><%= transaction.deposit %> din</p>
           <h2 id="date">
             Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new
             Date(transaction.unConvertedDate).getMonth() + 1%>.<%= new
@@ -149,9 +131,9 @@
         </div>
         <%}%> <%} else {%>
         <div class="transaction">
-          <h2 class="name">Ime: <%= transaction.name%></h2>
+          <h2 class="name"><%= transaction.name%></h2>
           <h2 id="type">Roba: <%= transaction.type %></h2>
-          <h2 id="quantity">Kolicina: <%= transaction.quantity %></h2>
+          <h2 id="quantity">Količina: <%= transaction.quantity %> x</h2>
           <h2 id="price">Cena: <%= transaction.price %></h2>
           <h2 id="date">
             Datum: <%= new Date(transaction.unConvertedDate).getDate()%>.<%= new

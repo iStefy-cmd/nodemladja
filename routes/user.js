@@ -15,6 +15,7 @@ router.get(
 );
 router.post(
   "/user/post-add-transaction",
+
   isAuth,
   userController.postAddTransaction
 );

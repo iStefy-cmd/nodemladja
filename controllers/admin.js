@@ -77,6 +77,7 @@ exports.getUserInfo = async (req, res, next) => {
     res.render("admin/user-info", {
       user: user,
       transactionsGrouped: groupedTransactions,
+      errors: "good",
     });
   } catch (error) {
     console.log(error);
@@ -187,7 +188,9 @@ exports.postDeleteRequest = (req, res, next) => {
 };
 exports.postAddTransaction = (req, res, next) => {
   if (req.body.deposit) {
-    console.log(req.body);
+    if (isNaN(req.body.deposit)) {
+      return res.render(`error/number`);
+    }
 
     const name = req.body.name;
     const type = "uplata";
@@ -250,6 +253,8 @@ exports.postAddTransaction = (req, res, next) => {
     const price = req.body.price;
     const description = "notdeposit";
     const deposit = 0;
+    if (isNaN(quantity) || isNaN(price)) return res.render(`error/number`);
+
     User.findOne({ name: name })
       .then((res) => {
         let userID = res ? res._id : "";

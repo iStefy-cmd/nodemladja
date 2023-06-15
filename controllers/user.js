@@ -76,10 +76,12 @@ exports.postAddTransaction = async (req, res, next) => {
   try {
     const admins = await Admin.find();
     if (deposit) {
+      if (isNaN(deposit)) return res.render(`error/number`);
       type = "uplata";
       quantity = deposit;
       price = 1;
     } else {
+      if (isNaN(quantity) || isNaN(price)) return res.render(`error/number`);
       description = "notdeposit";
       deposit = 0;
     }

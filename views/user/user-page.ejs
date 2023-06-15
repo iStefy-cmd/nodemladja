@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="css/transaction-for-user.css" />
-    <style>input {
+    <style>
+    body{
+      margin-top: 25px;
+    }input {
       margin-left: 8px;
     }h3 {
       font-weight: 1;
@@ -24,7 +27,7 @@
       .transaction-form {
         margin-bottom: 22px;
         display: grid;
-        margin-top: 50px;
+        margin-top: 22px;
         border-radius: 20px;
         border: 2px solid black;
         grid-template-columns: 25%25%25%25%;
@@ -121,13 +124,13 @@
     </style>
   </head>
   <body>
-    <h1><%= user.name%></h1>
+    <h1>Korisnik: <%= user.name%></h1>
     <div> 
       <form action="/logout" method="POST">
       
-    <h1><%= user.debt%> din</h1>
+    <h1>Dug: <%= user.debt%> din</h1>
       <button type="submit" style=" 
-      background-color: rgb(240, 34, 34); height: 35px;">Logout</button>
+      background-color: rgb(240, 34, 34); height: 35px;">Odjavi se</button>
       <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
     </form></div>
 
@@ -142,14 +145,14 @@
           <label for="type">Roba</label> <input type="text" name="type" />
         </div>
         <div>
-          <label for="quantity">Kolicina</label>
-          <input type="text" name="quantity" />
+          <label for="quantity">Količina</label>
+          <input type="number" name="quantity" />
         </div>
         <div>
-          <label for="price">Cena</label> <input type="text" name="price" />
+          <label for="price">Cena</label> <input type="number" name="price" />
         </div>
 
-        <button type="submit" style="height: 35px;">Posalji zahtev</button>
+        <button type="submit" style="height: 35px;">Pošalji zahtev</button>
         <div></div>
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         
@@ -167,7 +170,7 @@
           <input type="text" name="description" /></div> 
         
 
-        <button type="submit">Posalji zahtev</button>
+        <button type="submit">Pošalji zahtev</button>
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
       </form></div>
    
@@ -208,9 +211,9 @@
           
           <%} else {%>
           <div style="margin-block: 3px;" class="transaction">
-            <p>Type: <%= transaction.type %></p>
-            <p>Price: <%= transaction.price %> din</p>
-            <p>Kolicina: <%= transaction.quantity %> unit</p>
+            <p>Roba: <%= transaction.type %></p>
+            <p>Cena: <%= transaction.price %> din</p>
+            <p>Količina: <%= transaction.quantity %> x</p>
   
             <p>Dug: <%= transaction.debt %> din</p>
            

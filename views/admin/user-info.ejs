@@ -267,6 +267,9 @@ input {
   margin-left: 65px;
   text-align: left;
 }
+.inputRed #deposit{
+  border-color: red;color: red;
+}
 
     </style>
   <body>
@@ -280,15 +283,15 @@ input {
     <div class="popup-container none">
       <div class="popup">
         
-        <h2>Da li ste sigurni da zelite obrisati profil?</h2>
+        <h2>Da li ste sigurni da želite obrisati profil?</h2>
         <div class="popup-buttons">
         <form action="/admin/delete-profile/<%= user._id%>" method="POST">
           <button style="height: 50px;" class="confirm" id="delete-profile" type="submit">
-            Obrisi Profil
+            OBRIŠI PROFIL
           </button>
           <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
         </form>
-        <button class="cancel" style="height: 50px;" onclick="Action(event)">Otkazi</button>
+        <button class="cancel" style="height: 50px;" onclick="Action(event)">OTKAŽI</button>
       </div>
     </div>
     </div>
@@ -309,22 +312,21 @@ input {
       <input type="hidden" name="isLocal" value="true">
          <div> <label for="type">Roba</label>
           <input type="text" name="type" /></div> 
-         <div> <label for="quantity">Kolicina</label>
-          <input type="text" name="quantity" /></div>
+         <div> <label for="quantity">Količina</label>
+          <input type="number" name="quantity" /></div>
           <div><label for="price">Cena</label>
-            <input type="text" name="price" /></div> 
+            <input type="number" name="price" /></div> 
        
        
-        
        
         <button type="submit">Potvrdi</button>
        
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
       </form>
-      <div><form class="deposit-transaction-form" action="/admin/post-add-transaction" method="POST">
+      <div><form class="<%=errors=='not number'?'deposit-transaction-form inputRed': 'deposit-transaction-form' %>" action="/admin/post-add-transaction" method="POST">
         <input type="hidden" name="name" value="<%= user.name%>">
         <input type="hidden" name="isLocal" value="true">
-        <div> <label for="deposit">Uplata</label>
+        <div id="deposit"> <label for="deposit">Uplata</label>
           <input type="number" name="deposit" /></div>
         <div> <label for="description">Dodatne informacije</label>
             <input type="text" name="description" /></div> 
@@ -338,9 +340,9 @@ input {
         <a id="main-page" href="/admin/main">MAIN PAGE</a
         >
         <div><button class="confirm" id="d" onclick="Action(event)">
-          Obrisi Profil
+          OBRIŠI PROFIL
         </button></div>
-        <a id="all-transactions" href="/admin/transactions">TRANSACTIONS</a>
+        <a id="all-transactions" href="/admin/transactions">SVE TRANSAKCIJE</a>
       </div>
       
  
@@ -366,7 +368,7 @@ input {
                 onclick="postDeleteTransaction(this)"
                 type="submit"
               >
-               OBRISI
+               OBRIŠI
               </button>
               <input
                 type="hidden"
@@ -390,7 +392,7 @@ input {
                 onclick="postDeleteTransaction(this)"
                 type="submit"
               >
-               OBRISI
+               OBRIŠI
               </button>
               <input
                 type="hidden"
@@ -404,9 +406,9 @@ input {
           
           <%} else {%>
           <div class="transaction">
-            <p>Type: <%= transaction.type %></p>
-            <p>Price: <%= transaction.price %> din</p>
-            <p>Kolicina: <%= transaction.quantity %> unit</p>
+            <p>Roba: <%= transaction.type %></p>
+            <p>Cena: <%= transaction.price %> din</p>
+            <p>Količina: <%= transaction.quantity %> x</p>
   
             <p>Dug: <%= transaction.debt %> din</p>
             <button
@@ -414,7 +416,7 @@ input {
               onclick="postDeleteTransaction(this)"
               type="submit"
             >
-             OBRISI
+             OBRIŠI
             </button>
             <input
               type="hidden"
