@@ -428,9 +428,7 @@ exports.postApproveTransaction = async (req, res, next) => {
       console.log("Created Product");
     }
 
-    //////////////////
-
-    return res.status(200).json({ message: "radi" });
+    res.status(200).json({ message: "radi" });
   } catch (error) {
     console.log(error);
   }
