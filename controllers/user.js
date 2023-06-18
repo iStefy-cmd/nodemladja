@@ -85,6 +85,7 @@ exports.postAddTransaction = async (req, res, next) => {
       description = "notdeposit";
       deposit = 0;
     }
+
     admins.forEach(async (admin) => {
       admin.requests.push({
         name: name,
@@ -97,7 +98,6 @@ exports.postAddTransaction = async (req, res, next) => {
       });
       await admin.save();
     });
-    console.log("request sent " + description);
 
     return res.redirect("/main");
   } catch (error) {

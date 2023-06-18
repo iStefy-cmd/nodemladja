@@ -238,7 +238,7 @@ exports.postAddTransaction = (req, res, next) => {
       })
       .then((result) => {
         // console.log(result);
-        console.log("Created Product");
+
         if (req.body.isLocal == "true")
           return res.redirect("/admin/user/" + name);
         return res.redirect("/admin/allUsers");
@@ -332,7 +332,6 @@ exports.postAddTransaction = (req, res, next) => {
       })
       .then((result) => {
         // console.log(result);
-        console.log("Created Product");
         if (req.body.isLocal == "true")
           return res.redirect("/admin/user/" + name);
         return res.redirect("/admin/allUsers");
@@ -362,10 +361,10 @@ exports.postDeleteProfile = (req, res, next) => {
 exports.postApproveTransaction = async (req, res, next) => {
   try {
     let name = req.query.name;
-    let deposit = req.query.deposit;
+    let deposit = +req.query.deposit;
     let description = req.query.description;
-    let price = req.query.price;
-    let quantity = req.query.quantity;
+    let price = +req.query.price;
+    let quantity = +req.query.quantity;
     let type = req.query.type;
     let userID = req.query.userID;
     let transactionID = req.query.transactionID;
@@ -377,7 +376,8 @@ exports.postApproveTransaction = async (req, res, next) => {
     );
     //////////////////
     await admin.save();
-    if (deposit === "uplata") {
+    if (description != "notdeposit" && deposit != 0) {
+
       type = "uplata";
       quantity = deposit;
       price = 1;
@@ -403,8 +403,10 @@ exports.postApproveTransaction = async (req, res, next) => {
 
       await user.save();
       await transaction.save();
-      console.log("Created Product");
     } else {
+    
+      
+
       const transaction = new Transaction({
         name: name,
         type: type,
@@ -421,11 +423,10 @@ exports.postApproveTransaction = async (req, res, next) => {
         price: price,
         transactionID: transaction._id,
       });
-      user.debt += price * quantity;
+      user.debt += +price * +quantity;
 
       await user.save();
       await transaction.save();
-      console.log("Created Product");
     }
 
     res.status(200).json({ message: "radi" });

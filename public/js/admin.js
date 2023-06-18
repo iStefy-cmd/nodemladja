@@ -9,7 +9,7 @@ const postDeleteTransaction = (btn) => {
   const csrf = btn.parentNode.querySelector('[name="_csrf"]').value;
 
   fetch(
-    `https://outrageous-hen-suit.cyclic.app/admin/delete?transactionID=${transactionID}&userID=${userID}`,
+    `http://localhost:3000/admin/delete?transactionID=${transactionID}&userID=${userID}`,
     {
       method: "DELETE",
       headers: {
@@ -43,16 +43,16 @@ const approveTransaction = (btn) => {
 
   const name = parentDiv.querySelector(".name").textContent;
   const deposit = parentDiv.querySelector(".deposit")
-    ? +parentDiv.querySelector(".deposit").textContent
+    ? +parentDiv.querySelector(".deposit").textContent.trim().slice(0, -3)
     : 0;
   const description = parentDiv.querySelector(".description")
     ? parentDiv.querySelector(".description").textContent
     : "notdeposit";
   const price = parentDiv.querySelector(".price")
-    ? +parentDiv.querySelector(".price").textContent
+    ? parentDiv.querySelector(".price").textContent.trim().slice(0, -3)
     : 1;
   const quantity = parentDiv.querySelector(".quantity")
-    ? +parentDiv.querySelector(".quantity").textContent
+    ? parentDiv.querySelector(".quantity").textContent.trim().slice(0, -1)
     : deposit;
   const type = parentDiv.querySelector(".type").textContent;
   const csrfToken = parentDiv.querySelector(`._csrf`).value;
@@ -60,7 +60,7 @@ const approveTransaction = (btn) => {
   const transactionID = parentDiv.querySelector(".transactionID").value;
 
   fetch(
-    `https://outrageous-hen-suit.cyclic.app/admin/approveTransaction?name=${name}&deposit=${deposit}&description=${description}&price=${price}&quantity=${quantity}&type=${type}&userID=${userID}&transactionID=${transactionID}`,
+    `http://localhost:3000/admin/approveTransaction?name=${name}&deposit=${deposit}&description=${description}&price=${price}&quantity=${quantity}&type=${type}&userID=${userID}&transactionID=${transactionID}`,
     {
       method: "POST",
 
@@ -95,7 +95,7 @@ const rejectTransaction = (btn) => {
   const transactionID = parentDiv.querySelector(".transactionID").value;
 
   fetch(
-    `https://outrageous-hen-suit.cyclic.app/admin/rejectTransaction?transactionID=${transactionID}`,
+    `http://localhost:3000/admin/rejectTransaction?transactionID=${transactionID}`,
     {
       method: "POST",
 
