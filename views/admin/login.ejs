@@ -24,11 +24,11 @@
       <h1>Admin Prijava</h1>
       <form action="/admin-login" method="POST">
         <div class="<%=errors?'email emailred': 'email' %>">
-          <label for="email">Email</label> <input name="email" type="email" />
+          <label for="email">Email</label> <input required name="email" type="email" />
         </div>
         <div class="password">
           <label for="password">Password</label>
-          <input name="password" type="password" />
+          <input required name="password" type="password" />
           <button type="submit" style="margin-top: 30px; font-size: 18px">
             Prijavi se
           </button>

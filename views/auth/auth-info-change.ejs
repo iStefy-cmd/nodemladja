@@ -23,7 +23,7 @@
       <h1>Promena podataka</h1>
       <form action="/auth-info-change" method="POST">
         <div class="<%=errors?'email emailred': 'email' %>">
-          <label for="email">Email</label> <input name="email" type="email" />
+          <label for="email">Email</label> <input required name="email" type="email" />
         </div>
         <div class="<%=errors?'email emailred': 'email' %>">
           <label for="newemail">Novi Email (nije obavezno)</label>
@@ -31,15 +31,15 @@
         </div>
         <div class="password">
           <label for="password">Stara Lozinka</label>
-          <input name="password" type="password" />
+          <input  required name="password" type="password" />
         </div>
         <div class="password">
           <label for="newpassword">Nova Lozinka</label>
-          <input name="newpassword" type="password" />
+          <input required name="newpassword" type="password" />
         </div>
         <div class="password">
           <label for="newpasswordconfirmation">Potvrdi Novu Lozinku</label>
-          <input name="newpasswordconfirmation" type="password" />
+          <input required name="newpasswordconfirmation" type="password" />
         </div>
 
         <input type="hidden" name="_csrf" value="<%= csrfToken%>" />

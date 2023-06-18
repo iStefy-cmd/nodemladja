@@ -142,14 +142,14 @@
       >
        <input type="hidden" name="name" value="<%= user.name%>">
         <div>
-          <label for="type">Roba</label> <input type="text" name="type" />
+          <label for="type">Roba</label> <input type="text" name="type" required />
         </div>
         <div>
           <label for="quantity">Količina</label>
-          <input type="number" name="quantity" />
+          <input type="number" required name="quantity" />
         </div>
         <div>
-          <label for="price">Cena</label> <input type="number" name="price" />
+          <label for="price">Cena</label> <input type="number" required name="price" />
         </div>
 
         <button type="submit" style="height: 35px;">Pošalji zahtev</button>
@@ -165,7 +165,7 @@
       <input type="hidden" name="name" value="<%= user.name%>">
       <input type="hidden" name="isLocal" value="true">
       <div> <label for="deposit">Uplata</label>
-        <input type="number" name="deposit" /></div>
+        <input type="number" required name="deposit" /></div>
       <div> <label for="description">Dodatne informacije</label>
           <input type="text" name="description" /></div> 
         

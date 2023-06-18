@@ -311,11 +311,11 @@ input {
       <input type="hidden" name="name" value="<%= user.name%>">
       <input type="hidden" name="isLocal" value="true">
          <div> <label for="type">Roba</label>
-          <input type="text" name="type" /></div> 
+          <input required type="text" name="type" /></div> 
          <div> <label for="quantity">Količina</label>
-          <input type="number" name="quantity" /></div>
+          <input required type="number" name="quantity" /></div>
           <div><label for="price">Cena</label>
-            <input type="number" name="price" /></div> 
+            <input required type="number" name="price" /></div> 
        
        
        
@@ -327,7 +327,7 @@ input {
         <input type="hidden" name="name" value="<%= user.name%>">
         <input type="hidden" name="isLocal" value="true">
         <div id="deposit"> <label for="deposit">Uplata</label>
-          <input type="number" name="deposit" /></div>
+          <input type="number" required name="deposit" /></div>
         <div> <label for="description">Dodatne informacije</label>
             <input type="text" name="description" /></div> 
           
